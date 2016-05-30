@@ -116,8 +116,8 @@ public:
         COMMAND_ID_HANDLER(ID_POPUP_DUPLICATE, OnPopupDuplicate)
         MESSAGE_HANDLER(WM_TIMER, OnTimer)
         CHAIN_MSG_MAP_MEMBER(ctrl_slider)
-        COMMAND_ID_HANDLER(ID_SAVEDROUTINGS_SAVEROUTINGFORTHISAPP, OnPopUpSave)
-        COMMAND_ID_HANDLER(ID_SAVEDROUTINGS_DELETEALLROUTINGSFORTHISAPP, OnPopUpDelete)
+        /*COMMAND_ID_HANDLER(ID_SAVEDROUTINGS_SAVEROUTINGFORTHISAPP, OnPopUpSave)
+        COMMAND_ID_HANDLER(ID_SAVEDROUTINGS_DELETEALLROUTINGSFORTHISAPP, OnPopUpDelete)*/
     END_MSG_MAP()
 
     LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -131,6 +131,6 @@ public:
     void DrawItem(LPDRAWITEMSTRUCT);
     LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     LRESULT OnPopUpSaveRouting(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-    LRESULT OnPopUpSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-    LRESULT OnPopUpDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+    //LRESULT OnPopUpSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+    //LRESULT OnPopUpDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };

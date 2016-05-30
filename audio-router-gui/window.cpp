@@ -2,7 +2,7 @@
 
 telemetry* telemetry_m = NULL;
 
-window::window(bootstrapper* bootstrap) : dlg_main_b(true), license(NULL), bootstrap(bootstrap)
+window::window(/*bootstrapper* bootstrap*/) : dlg_main_b(true)/*, license(NULL)*//*, bootstrap(bootstrap)*/
 {
     this->dlg_main = new dialog_main(*this);
     this->form_view = new formview(*this);
@@ -22,7 +22,7 @@ int window::OnCreate(LPCREATESTRUCT lpcs)
 {
     telemetry_m = new telemetry;
 
-    this->license = new dialog_licensing(*this);
+    /*this->license = new dialog_licensing(*this);*/
 
     this->m_hWndClient = this->dlg_main->Create(this->m_hWnd);
     this->dlg_main->ShowWindow(SW_SHOW);
@@ -78,8 +78,7 @@ LRESULT window::OnFileRefreshlist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWn
 LRESULT window::OnAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
     this->MessageBoxW(
-        L"Audio Router test version 0.10.1.\n" \
-        L"The testing license will expire after 1 June 16 in your local time.\n" \
+        L"Audio Router version 0.10.2.\n" \
         L"\nIf you come across any bugs(especially relating to routing or duplicating), " \
         L"or just have an idea for a new feature, " \
         L"please send a PM to the developer on reddit: reddit.com/user/audiorouterdev/", 
