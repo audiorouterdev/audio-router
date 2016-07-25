@@ -10,6 +10,7 @@ window::window(/*bootstrapper* bootstrap*/) : dlg_main_b(true)/*, license(NULL)*
 
 window::~window()
 {
+	STray.RemoveIcon();
     if(this->dlg_main_b)
         delete this->dlg_main;
     delete this->form_view;
@@ -27,11 +28,16 @@ int window::OnCreate(LPCREATESTRUCT lpcs)
     this->m_hWndClient = this->dlg_main->Create(this->m_hWnd);
     this->dlg_main->ShowWindow(SW_SHOW);
 
+	bIsVisible = true;
+	STray.hWnd = this->m_hWnd;
+	STray.SetTipText("Audio Router");
+	STray.AddIcon();
     return 0;
 }
 
 LRESULT window::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+
     if(wParam == SC_MINIMIZE)
     {
         for(dialog_main::dialog_arrays_t::iterator it = this->dlg_main->dialog_arrays.begin();
@@ -44,7 +50,9 @@ LRESULT window::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
             {
                 (*jt)->set_display_name(false, true);
             }
+
         }
+
     }
     else if(wParam == SC_RESTORE)
     {
@@ -65,6 +73,24 @@ LRESULT window::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
     return 0;
 }
 
+LRESULT window::OnTrayNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	switch (LOWORD(lParam) )
+	{
+	case WM_LBUTTONDBLCLK:
+		if(bIsVisible){
+			this->ShowWindow(SW_HIDE);
+			bIsVisible = false;
+		}
+		else {
+			this->ShowWindow(SW_SHOW);
+			bIsVisible = true;
+		}
+		return 0;
+		break;
+	}
+}
+
 LRESULT window::OnFileRefreshlist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
     if(!this->dlg_main_b)
@@ -73,7 +99,6 @@ LRESULT window::OnFileRefreshlist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWn
     }
     return 0;
 }
-
 
 LRESULT window::OnAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
@@ -85,7 +110,6 @@ LRESULT window::OnAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BO
         L"About", MB_ICONINFORMATION);
     return 0;
 }
-
 
 LRESULT window::OnFileSwitchview(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {

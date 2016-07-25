@@ -15,9 +15,7 @@ dialog_main::~dialog_main()
 
 void dialog_main::clear_dialog_arrays()
 {
-    for(auto it = this->dialog_arrays.begin();
-        it != this->dialog_arrays.end();
-        it++)
+	for (auto it = this->dialog_arrays.begin(); it != this->dialog_arrays.end(); it++)
     {
         delete *it;
     }

@@ -6,6 +6,8 @@
 #include "licensing.h"
 #include <memory>
 
+#include "clsSysTray.h"
+
 #define WIN_WIDTH 970//400
 #define WIN_HEIGHT 670//360
 #define GET(type, item) reinterpret_cast<type&>(this->GetDlgItem(item))
@@ -14,6 +16,10 @@ class window : public CFrameWindowImpl<window>
 {
 private:
     bool dlg_main_b;
+
+	clsSysTray STray;
+	BOOL bIsVisible;
+	
 public:
     dialog_main* dlg_main;
     formview* form_view;
@@ -25,8 +31,9 @@ public:
 
     DECLARE_FRAME_WND_CLASS(L"Audio Router", IDR_MAINFRAME);
 
-    BEGIN_MSG_MAP(window)
-        MESSAGE_HANDLER(WM_SYSCOMMAND, OnSysCommand)
+	BEGIN_MSG_MAP(window)
+		MESSAGE_HANDLER(WM_SYSCOMMAND, OnSysCommand)
+		MESSAGE_HANDLER(WM_TRAYNOTIFY, OnTrayNotify);
         MSG_WM_CREATE(OnCreate)
         /*MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)*/
         CHAIN_MSG_MAP(CFrameWindowImpl<window>)
@@ -42,4 +49,5 @@ public:
     LRESULT OnFileSwitchview(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnTrayNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 };
