@@ -61,20 +61,20 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		audio_router_mutex = CreateMutex(sec.get(), FALSE, L"Local\\audio-router-mutex");
 	}
 
-	if (audio_router_mutex == NULL) 
-	{
-		MessageBox(
-			NULL, L"Mutex creation failed. Audio Router will close.", NULL, MB_ICONERROR);
-		return 0;
-	}
-	else if (GetLastError() == ERROR_ALREADY_EXISTS) 
-	{
-		CloseHandle(audio_router_mutex);
-		MessageBox(
-			NULL, L"Another instance of Audio Router is already running. " \
-			L"Audio Router will close.", NULL, MB_ICONERROR);
-		return 0;
-	}
+	//if (audio_router_mutex == NULL)
+	//{
+	//	MessageBox(
+	//		NULL, L"Mutex creation failed. Audio Router will close.", NULL, MB_ICONERROR);
+	//	return 0;
+	//}
+	//else if (GetLastError() == ERROR_ALREADY_EXISTS)
+	//{
+	//	CloseHandle(audio_router_mutex);
+	//	MessageBox(
+	//		NULL, L"Another instance of Audio Router is already running. " \
+	//		L"Audio Router will close.", NULL, MB_ICONERROR);
+	//	return 0;
+	//}
 
 	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	if (hr != S_OK)
@@ -122,8 +122,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	{
 		window win/*(bootstrap.get())*/;
 		RECT r = { CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT + WIN_WIDTH, CW_USEDEFAULT + WIN_HEIGHT };
-		
-			 
+
+
 		if (win.CreateEx(NULL, &r) == NULL)
 		{
 			MessageBox(NULL, L"Could not create window. Audio Router will close.", NULL, MB_ICONERROR);
@@ -135,7 +135,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		while (GetMessage(&msg, NULL, 0, 0) > 0)
 		{
-			
+
 			if (win.dlg_main && IsDialogMessage(*win.dlg_main, &msg))
 				continue;
 			TranslateMessage(&msg);

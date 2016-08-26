@@ -12,8 +12,6 @@ clsSysTray::clsSysTray()
 	NotifyIconData.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_MAINFRAME));
 	NotifyIconData.szTip[0] = '\0';
 	NotifyIconData.hWnd = NULL;
-
-
 }
 
 
