@@ -1,6 +1,7 @@
 #include "window.h"
 
 telemetry* telemetry_m = NULL;
+HMENU trayIconMenu;
 
 window::window(/*bootstrapper* bootstrap*/) : dlg_main_b(true)/*, license(NULL)*//*, bootstrap(bootstrap)*/
 {
@@ -81,28 +82,41 @@ LRESULT window::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 
 LRESULT window::OnTrayNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+    if (trayIconMenu != NULL) {
+        DestroyMenu(trayIconMenu);
+        trayIconMenu = NULL;
+    }
+
     switch (LOWORD(lParam))
     {
-        case WM_LBUTTONDBLCLK:
+        case WM_LBUTTONUP:
             if (bIsVisible) {
                 this->ShowWindow(SW_HIDE);
                 bIsVisible = false;
-            } else {
+            }
+            else {
                 this->ShowWindow(SW_SHOW);
                 this->BringWindowToTop();
                 bIsVisible = true;
             }
             break;
         case WM_RBUTTONUP:
-                
-            /*POINT lpClickPoint;
+            trayIconMenu = CreatePopupMenu();
+            
+            UINT menuFlags = MF_BYPOSITION | MF_STRING;
+            InsertMenuW(trayIconMenu, -1, menuFlags, ID_TRAYMENU_SHOWHIDE, _T("Show/hide"));
+            InsertMenuW(trayIconMenu, -1, menuFlags, ID_FILE_EXIT, _T("Exit"));
 
-            UINT uFlag = MF_BYPOSITION | MF_STRING;
+            POINT lpClickPoint;
             GetCursorPos(&lpClickPoint);
-
-            HMENU hPopMenu = CreatePopupMenu();
-            InsertMenu(hPopMenu, 0xFFFFFFFF, MF_BYPOSITION | MF_STRING, ID_POPUP_EXIT, _T("Exit");
-*/
+            
+            int nReserved = 0;
+            
+            TrackPopupMenu(trayIconMenu,
+                TPM_RIGHTALIGN | TPM_BOTTOMALIGN | TPM_LEFTBUTTON,
+                lpClickPoint.x, lpClickPoint.y,
+                nReserved, this->m_hWnd, NULL
+            );
             break;
     }
     return 0;
@@ -164,5 +178,35 @@ LRESULT window::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 LRESULT window::OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
     PostQuitMessage(0);
+    return 0;
+}
+
+LRESULT window::OnTrayMenuExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+    if (trayIconMenu != NULL) {
+        DestroyMenu(trayIconMenu);
+        trayIconMenu = NULL;
+    }
+
+    PostQuitMessage(0);
+    return 0;
+}
+
+LRESULT window::OnTrayMenuShowHide(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+    if (trayIconMenu != NULL) {
+        DestroyMenu(trayIconMenu);
+        trayIconMenu = NULL;
+    }
+
+    if (bIsVisible) {
+        this->ShowWindow(SW_HIDE);
+        bIsVisible = false;
+    }
+    else {
+        this->ShowWindow(SW_SHOW);
+        this->BringWindowToTop();
+        bIsVisible = true;
+    }
     return 0;
 }

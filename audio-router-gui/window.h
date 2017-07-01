@@ -41,6 +41,8 @@ public:
         COMMAND_ID_HANDLER(ID_ABOUT, OnAbout)
         COMMAND_ID_HANDLER(ID_FILE_SWITCHVIEW, OnFileSwitchview)
         COMMAND_ID_HANDLER(ID_FILE_EXIT, OnFileExit)
+        COMMAND_ID_HANDLER(ID_TRAYMENU_SHOWHIDE, OnTrayMenuShowHide)
+        COMMAND_ID_HANDLER(ID_TRAYMENU_EXIT, OnTrayMenuExit)
         /*MSG_WM_NCHITTEST(OnNcHitTest)*/
     END_MSG_MAP()
 
@@ -49,8 +51,10 @@ public:
     LRESULT OnAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnFileSwitchview(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+    LRESULT OnTrayMenuShowHide(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+    LRESULT OnTrayMenuExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnTrayNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-    
+
 };
