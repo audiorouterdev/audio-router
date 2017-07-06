@@ -7,7 +7,8 @@ bool app_list::populate_list(bool x86, const filters_t & filters) {
     if ( ! EnumProcesses(processes, sizeof(processes),  & needed))
         return false; 
 
-    for (DWORD i = 0; i < (needed / sizeof(DWORD)); i++) {
+    size_t count = needed / sizeof(DWORD);
+    for (DWORD i = 0; i < count; i++) {
         app_info info; 
         info.id = processes[i]; 
         if (this->get_app_info(info, filters, x86, true))
@@ -58,8 +59,9 @@ bool app_list::get_app_info(app_info & info, const filters_t & filters, bool x86
     if (query_name && EnumProcessModulesEx(
         hprocess, hmodules, sizeof(hmodules),  & needed, x86?LIST_MODULES_32BIT:LIST_MODULES_64BIT)) {
         WCHAR name[MAX_PATH] =  {0}; 
-        std::wstring exename; 
-        if (GetModuleBaseName(hprocess, hmodules[0], name, sizeof(name)/sizeof(WCHAR))) {
+        std::wstring exename;
+        auto name_size = sizeof(name) / sizeof(WCHAR);
+        if (GetModuleBaseName(hprocess, hmodules[0], name, name_size)) {
             _wcslwr(name); 
             exename = name; 
 
@@ -70,9 +72,10 @@ bool app_list::get_app_info(app_info & info, const filters_t & filters, bool x86
                 return true; 
             }
 
-            for (DWORD j = 0; j < (needed / sizeof(HMODULE)); j++) {
+            size_t needed_count = needed / sizeof(HMODULE);
+            for (DWORD j = 0; j < needed_count; j++) {
                 WCHAR name[MAX_PATH] =  {0}; 
-                if (GetModuleBaseName(hprocess, hmodules[j], name, sizeof(name)/sizeof(WCHAR))) {
+                if (GetModuleBaseName(hprocess, hmodules[j], name, name_size)) {
                     _wcslwr(name); 
                     for (filters_t::const_iterator it = filters.begin(); it != filters.end(); it++)
                         if ( * it == name) {
