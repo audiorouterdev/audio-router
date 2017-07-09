@@ -3,7 +3,6 @@
 #ifndef DISABLE_TELEMETRY
 telemetry* telemetry_m = NULL;
 #endif
-HMENU trayIconMenu;
 
 // TODO: by wolfreak99: Check audiorouterdevs "remove saved routing functionality"
 // To determine if bootstrap (and telemetry) are related to feature..
@@ -19,7 +18,6 @@ window::window(/*bootstrapper* bootstrap*/) : dlg_main_b(true)/*, bootstrap(boot
 
 window::~window()
 {
-    STray.RemoveIcon();
     if (this->dlg_main_b)
         delete this->dlg_main;
     delete this->form_view;
@@ -39,109 +37,96 @@ int window::OnCreate(LPCREATESTRUCT lpcs)
     this->m_hWndClient = this->dlg_main->Create(this->m_hWnd);
     this->dlg_main->ShowWindow(SW_SHOW);
 
-    bIsVisible = true;
-    STray.hWnd = this->m_hWnd;
-    STray.SetTipText("Audio Router");
-    STray.AddIcon();
+    ShowSystemTrayIcon();
+
     return 0;
+}
+
+LRESULT window::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+    HideSystemTrayIcon();
+    return 0;
+}
+
+LRESULT window::OnQuit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+    this->DestroyWindow();
+    // TODO: by wolfreak99: This may not even be needed
+    PostQuitMessage(0);
+    return 0;
+}
+
+LRESULT window::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+    return HTCLOSE;
 }
 
 LRESULT window::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+    bHandled = FALSE;
+    // TODO: by wolfreak99: does "bHandled" act the same way as unityengines event eating?
+    // Does this being true basically mean the system won't handle the event afterward, and
+    // it being false mean it would handle it? if so, consider utilizing it when ensuring
+    // the tray menu exit closes properly..
 
-    if (wParam == SC_MINIMIZE) {
-        for (dialog_main::dialog_arrays_t::iterator it = this->dlg_main->dialog_arrays.begin();
-             it != this->dlg_main->dialog_arrays.end();
-             it++)
-        {
-            for (dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
-                 jt != (*it)->dialog_controls.end();
-                 jt++)
-            {
-                (*jt)->set_display_name(false, true);
-            }
-
-        }
-
+    switch (wParam) {
+    case SC_CLOSE:
+        // Closing the window shows the icon while hiding it from the minimized windows bar.
         this->ShowWindow(SW_HIDE);
-        bIsVisible = false;
-        return 0;
-
-    } else if (wParam == SC_RESTORE) {
+        bHandled = TRUE;
+        break;
+    case SC_RESTORE:
+        // TODO: by wolfreak99: This iteration may not be needed, as it's commented out
+        // as well in the aformentioned cherry-pick. i'm keeping it here for now just in case
         for (dialog_main::dialog_arrays_t::iterator it = this->dlg_main->dialog_arrays.begin();
-             it != this->dlg_main->dialog_arrays.end();
-             it++)
-        {
+            it != this->dlg_main->dialog_arrays.end();
+            it++) {
             for (dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
-                 jt != (*it)->dialog_controls.end();
-                 jt++)
-            {
+                jt != (*it)->dialog_controls.end();
+                jt++) {
                 (*jt)->set_display_name(false, false);
             }
         }
-    } else if (wParam == SC_CLOSE) {
-        this->ShowWindow(SW_HIDE);
-        bIsVisible = false;
-        return 0;
+        ShowWindow(SW_SHOW);
+        BringWindowToTop();
+        break;
     }
 
-
-    bHandled = FALSE;
     return 0;
 }
 
-LRESULT window::OnTrayNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
-{
-    if (trayIconMenu != NULL) {
-        DestroyMenu(trayIconMenu);
-        trayIconMenu = NULL;
-    }
+LRESULT window::OnSystemTrayIcon(UINT, WPARAM wParam, LPARAM lParam, BOOL & bHandled) {
 
-    switch (LOWORD(lParam))
-    {
-        case WM_LBUTTONUP:
-            if (bIsVisible) {
-                this->ShowWindow(SW_HIDE);
-                bIsVisible = false;
-            }
-            else {
-                this->ShowWindow(SW_SHOW);
-                this->BringWindowToTop();
-                bIsVisible = true;
-            }
-            break;
-        case WM_RBUTTONUP:
-            trayIconMenu = CreatePopupMenu();
-            
-            UINT menuFlags = MF_BYPOSITION | MF_STRING;
-            InsertMenuW(trayIconMenu, -1, menuFlags, ID_TRAYMENU_SHOWHIDE, _T("Show/hide"));
-            InsertMenuW(trayIconMenu, -1, menuFlags, ID_FILE_EXIT, _T("Exit"));
+    ATLASSERT(wParam == 1);
+    switch (lParam) {
+    case WM_LBUTTONUP:
+        ShowOrHideWindow();
+        break;
+    case WM_RBUTTONUP:
+        SetForegroundWindow(m_hWnd);
 
-            POINT lpClickPoint;
-            GetCursorPos(&lpClickPoint);
-            
-            int nReserved = 0;
-            
-            TrackPopupMenu(trayIconMenu,
-                TPM_RIGHTALIGN | TPM_BOTTOMALIGN | TPM_LEFTBUTTON,
-                lpClickPoint.x, lpClickPoint.y,
-                nReserved, this->m_hWnd, NULL
-            );
-            break;
+        CPoint pos;
+        ATLVERIFY(GetCursorPos(&pos));
+
+        CMenu menu;
+        menu.LoadMenuW(IDR_TRAYMENU);
+        CMenuHandle popupMenu = menu.GetSubMenu(0);
+
+        popupMenu.TrackPopupMenu(TPM_RIGHTALIGN | TPM_BOTTOMALIGN | TPM_LEFTBUTTON, pos.x, pos.y, this->m_hWnd);
+        break;
     }
     return 0;
 }
 
-LRESULT window::OnFileRefreshlist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT window::OnFileRefreshlist(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
-    if (!this->dlg_main_b)
-    {
+    if (!this->dlg_main_b) {
         this->form_view->refresh_list();
     }
     return 0;
 }
 
-LRESULT window::OnAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT window::OnAbout(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
     this->MessageBoxW(
         L"Audio Router version 0.10.2.\n" \
@@ -152,21 +137,21 @@ LRESULT window::OnAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BO
     return 0;
 }
 
-LRESULT window::OnFileSwitchview(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT window::OnFileSwitchview(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
     RECT rc;
     this->GetClientRect(&rc);
 
-    if (this->dlg_main_b)
-    {
+    if (this->dlg_main_b) {
         this->dlg_main->DestroyWindow();
         delete this->dlg_main;
 
         this->m_hWndClient = this->form_view->Create(*this);
         //this->form_view->ShowWindow(SW_SHOW);
         this->form_view->SetWindowPos(NULL, &rc, SWP_NOZORDER | SWP_SHOWWINDOW);
-    } else
-    {
+    }
+    else {
+        //TODO: by wolfreak99: Should form_view be deleted as well?
         this->form_view->DestroyWindow();
 
         this->dlg_main = new dialog_main(*this);
@@ -180,43 +165,62 @@ LRESULT window::OnFileSwitchview(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWnd
     return 0;
 }
 
-LRESULT window::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT window::OnFileExit(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
-    return HTCLOSE;
-}
-
-LRESULT window::OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-{
-    PostQuitMessage(0);
+    SendMessage(WM_QUIT);
     return 0;
 }
 
-LRESULT window::OnTrayMenuExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT window::OnTrayMenuExit(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
-    if (trayIconMenu != NULL) {
-        DestroyMenu(trayIconMenu);
-        trayIconMenu = NULL;
-    }
-
-    PostQuitMessage(0);
+    SendMessage(WM_QUIT);
     return 0;
 }
 
-LRESULT window::OnTrayMenuShowHide(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT window::OnTrayMenuShowHide(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
-    if (trayIconMenu != NULL) {
-        DestroyMenu(trayIconMenu);
-        trayIconMenu = NULL;
-    }
+    ShowOrHideWindow();
+    return 0;
+}
 
-    if (bIsVisible) {
-        this->ShowWindow(SW_HIDE);
-        bIsVisible = false;
+void window::ShowOrHideWindow()
+{
+    if (IsWindowOpen()) {
+        SendMessage(WM_SYSCOMMAND, SC_CLOSE);
     }
     else {
-        this->ShowWindow(SW_SHOW);
-        this->BringWindowToTop();
-        bIsVisible = true;
+        SendMessage(WM_SYSCOMMAND, SC_RESTORE);
     }
-    return 0;
+}
+
+void window::ShowSystemTrayIcon()
+{
+    HideSystemTrayIcon();
+
+    if (!m_NotifyIconData.cbSize) {
+        m_NotifyIconData.cbSize = NOTIFYICONDATAA_V1_SIZE;
+        m_NotifyIconData.hWnd = m_hWnd;
+        m_NotifyIconData.uID = 1;
+        m_NotifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+        m_NotifyIconData.uCallbackMessage = WM_SYSTEMTRAYICON;
+        m_NotifyIconData.hIcon = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR,
+            GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON));
+        ATL::CString sWindowText;
+        GetWindowText(sWindowText);
+        _tcscpy_s(m_NotifyIconData.szTip, sWindowText);
+    }
+
+    Shell_NotifyIcon(NIM_ADD, &m_NotifyIconData);
+}
+
+void window::HideSystemTrayIcon()
+{
+    if (m_NotifyIconData.cbSize) {
+        Shell_NotifyIcon(NIM_DELETE, &m_NotifyIconData);
+    }
+}
+
+bool window::IsWindowOpen()
+{
+    return this->IsWindowVisible() && !this->IsIconic();
 }
