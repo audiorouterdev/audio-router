@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLUSER_H__
 #define __ATLUSER_H__
@@ -1152,12 +1149,12 @@ public:
 	}
 
 #ifndef _WIN32_WCE
-	bool LoadEx(ATL::_U_STRINGorID Type, ATL::_U_STRINGorID ID, WORD wLanguage)
+	bool LoadEx(ATL::_U_STRINGorID ID, ATL::_U_STRINGorID Type, WORD wLanguage)
 	{
 		ATLASSERT(m_hResource == NULL);
 		ATLASSERT(m_hGlobal == NULL);
 
-		m_hResource = ::FindResourceEx(ModuleHelper::GetResourceInstance(), ID.m_lpstr, Type.m_lpstr, wLanguage);
+		m_hResource = ::FindResourceEx(ModuleHelper::GetResourceInstance(), Type.m_lpstr, ID.m_lpstr, wLanguage);
 		if(m_hResource == NULL)
 			return false;
 
@@ -1237,7 +1234,7 @@ inline HBITMAP AtlLoadBitmap(ATL::_U_STRINGorID bitmap)
 inline HBITMAP AtlLoadSysBitmap(ATL::_U_STRINGorID bitmap)
 {
 #ifdef _DEBUG
-	WORD wID = (WORD)bitmap.m_lpstr;
+	WORD wID = LOWORD(bitmap.m_lpstr);
 	ATLASSERT(wID >= 32734 && wID <= 32767);
 #endif // _DEBUG
 	return ::LoadBitmap(NULL, bitmap.m_lpstr);
@@ -1315,7 +1312,7 @@ inline HBITMAP AtlLoadSysBitmapImage(WORD wBitmapID, UINT fuLoad = LR_DEFAULTCOL
 inline HCURSOR AtlLoadSysCursorImage(ATL::_U_STRINGorID cursor, UINT fuLoad = LR_DEFAULTCOLOR | LR_DEFAULTSIZE, int cxDesired = 0, int cyDesired = 0)
 {
 #ifdef _DEBUG
-	WORD wID = (WORD)cursor.m_lpstr;
+	WORD wID = LOWORD(cursor.m_lpstr);
 	ATLASSERT((wID >= 32512 && wID <= 32516) || (wID >= 32640 && wID <= 32648) || (wID == 32650) || (wID == 32651));
 	ATLASSERT((fuLoad & LR_LOADFROMFILE) == 0);   // this one doesn't load from a file
 #endif // _DEBUG
@@ -1325,7 +1322,7 @@ inline HCURSOR AtlLoadSysCursorImage(ATL::_U_STRINGorID cursor, UINT fuLoad = LR
 inline HICON AtlLoadSysIconImage(ATL::_U_STRINGorID icon, UINT fuLoad = LR_DEFAULTCOLOR | LR_DEFAULTSIZE, int cxDesired = 0, int cyDesired = 0)
 {
 #ifdef _DEBUG
-	WORD wID = (WORD)icon.m_lpstr;
+	WORD wID = LOWORD(icon.m_lpstr);
 	ATLASSERT(wID >= 32512 && wID <= 32517);
 	ATLASSERT((fuLoad & LR_LOADFROMFILE) == 0);   // this one doesn't load from a file
 #endif // _DEBUG

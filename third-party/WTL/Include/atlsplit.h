@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLSPLIT_H__
 #define __ATLSPLIT_H__
@@ -54,7 +51,7 @@ namespace WTL
 
 // Note: SPLIT_PROPORTIONAL and SPLIT_RIGHTALIGNED/SPLIT_BOTTOMALIGNED are 
 // mutually exclusive. If both are set, splitter defaults to SPLIT_PROPORTIONAL.
-// SPLIT_GRADIENTBAR doesn't wotk with _ATL_NO_MSIMG
+// SPLIT_GRADIENTBAR doesn't work with _ATL_NO_MSIMG
 
 
 template <class T>
@@ -185,6 +182,11 @@ public:
 		return bRet;
 	}
 
+	int GetSplitterPos() const
+	{
+		return m_xySplitterPos;
+	}
+
 	void SetSplitterPosPct(int nPct, bool bUpdate = true)
 	{
 		ATLASSERT((nPct >= 0) && (nPct <= 100));
@@ -196,9 +198,10 @@ public:
 			UpdateSplitterLayout();
 	}
 
-	int GetSplitterPos() const
+	int GetSplitterPosPct() const
 	{
-		return m_xySplitterPos;
+		int cxyTotal = m_bVertical ? (m_rcSplitter.right - m_rcSplitter.left - m_cxySplitBar - m_cxyBarEdge) : (m_rcSplitter.bottom - m_rcSplitter.top - m_cxySplitBar - m_cxyBarEdge);
+		return ((cxyTotal > 0) && (m_xySplitterPos >= 0)) ? (::MulDiv(m_xySplitterPos, m_nPropMax, cxyTotal) / 100) : -1;
 	}
 
 	bool SetSinglePaneMode(int nPane = SPLIT_PANE_NONE)
@@ -296,7 +299,7 @@ public:
 	{
 		ATLASSERT((nPane == SPLIT_PANE_LEFT) || (nPane == SPLIT_PANE_RIGHT));
 		if((nPane != SPLIT_PANE_LEFT) && (nPane != SPLIT_PANE_RIGHT))
-			return false;
+			return NULL;
 
 		return m_hWndPane[nPane];
 	}
@@ -671,9 +674,10 @@ public:
 		if(!m_bFullDrag)
 			DrawGhostBar();
 
-		if(!m_bFullDrag || (m_xySplitterPos != m_xySplitterPosNew))
+		if((m_xySplitterPosNew != -1) && (!m_bFullDrag || (m_xySplitterPos != m_xySplitterPosNew)))
 		{
 			m_xySplitterPos = m_xySplitterPosNew;
+			m_xySplitterPosNew = -1;
 			UpdateSplitterLayout();
 			T* pT = static_cast<T*>(this);
 			pT->UpdateWindow();

@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLFRAME_H__
 #define __ATLFRAME_H__
@@ -129,8 +126,12 @@ public:
 				{
 					if(m_uCommonResourceID != 0)   // use it if not zero
 					{
-						m_wc.hIcon = (HICON)::LoadImage(ModuleHelper::GetResourceInstance(), MAKEINTRESOURCE(m_uCommonResourceID), IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR);
-						m_wc.hIconSm = (HICON)::LoadImage(ModuleHelper::GetResourceInstance(), MAKEINTRESOURCE(m_uCommonResourceID), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+						m_wc.hIcon = (HICON)::LoadImage(ModuleHelper::GetResourceInstance(), 
+							MAKEINTRESOURCE(m_uCommonResourceID), IMAGE_ICON, 
+							::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON), LR_DEFAULTCOLOR);
+						m_wc.hIconSm = (HICON)::LoadImage(ModuleHelper::GetResourceInstance(), 
+							MAKEINTRESOURCE(m_uCommonResourceID), IMAGE_ICON, 
+							::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
 					}
 					m_atom = ::RegisterClassEx(&m_wc);
 				}
@@ -209,7 +210,9 @@ public:
 				if (m_atom == 0)
 				{
 					if(m_uCommonResourceID != 0)   // use it if not zero
-						m_wc.hIcon = (HICON)::LoadImage(ModuleHelper::GetResourceInstance(), MAKEINTRESOURCE(m_uCommonResourceID), IMAGE_ICON, 32, 32, LR_DEFAULTCOLOR);
+						m_wc.hIcon = (HICON)::LoadImage(ModuleHelper::GetResourceInstance(), 
+							MAKEINTRESOURCE(m_uCommonResourceID), IMAGE_ICON, 
+							::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON), LR_DEFAULTCOLOR);
 					m_atom = ::RegisterClass(&m_wc);
 				}
 			}
@@ -1048,13 +1051,13 @@ public:
 					// get button's text
 					const int cchBuff = 200;
 					TCHAR szBuff[cchBuff] = { 0 };
-					LPTSTR lpstrText = szBuff;
+					LPCTSTR lpstrText = szBuff;
 					TBBUTTONINFO tbbi = { 0 };
 					tbbi.cbSize = sizeof(TBBUTTONINFO);
 					tbbi.dwMask = TBIF_TEXT;
 					tbbi.pszText = szBuff;
 					tbbi.cchText = cchBuff;
-					if(wnd.SendMessage(TB_GETBUTTONINFO, tbb.idCommand, (LPARAM)&tbbi) == -1 || lstrlen(szBuff) == 0)
+					if((wnd.SendMessage(TB_GETBUTTONINFO, tbb.idCommand, (LPARAM)&tbbi) == -1) || (szBuff[0] == 0))
 					{
 						// no text for this button, try a resource string
 						lpstrText = _T("");
@@ -2945,6 +2948,9 @@ public:
 		{
 			if(m_arrUIMap[i].m_nID == nID)
 			{
+				if((m_arrUIData[i].m_wState & UPDUI_TEXT) != 0)
+					delete [] m_arrUIData[i].m_lpstrText;
+
 				BOOL bRet = m_arrUIMap.RemoveAt(i);
 				ATLASSERT(bRet);
 				bRet = m_arrUIData.RemoveAt(i);
@@ -3069,7 +3075,7 @@ public:
 	bool UIAddToolBar(HWND hWndToolBar)
 	{
 		ATLASSERT(::IsWindow(hWndToolBar));
-		TBBUTTONINFO tbbi = {sizeof TBBUTTONINFO, TBIF_COMMAND | TBIF_STYLE | TBIF_BYINDEX};
+		TBBUTTONINFO tbbi = { sizeof(TBBUTTONINFO), TBIF_COMMAND | TBIF_STYLE | TBIF_BYINDEX };
 
 		// Add toolbar buttons
 		for (int uItem = 0; ::SendMessage(hWndToolBar, TB_GETBUTTONINFO, uItem, (LPARAM)&tbbi) != -1; uItem++)

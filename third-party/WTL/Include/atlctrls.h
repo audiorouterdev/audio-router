@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLCTRLS_H__
 #define __ATLCTRLS_H__
@@ -1725,7 +1722,7 @@ public:
 	BOOL HasSelection() const
 	{
 		const T* pT = static_cast<const T*>(this);
-		int nMin, nMax;
+		int nMin = 0, nMax = 0;
 		::SendMessage(pT->m_hWnd, EM_GETSEL, (WPARAM)&nMin, (LPARAM)&nMax);
 		return (nMin != nMax);
 	}
@@ -1811,13 +1808,12 @@ public:
 #ifndef _WIN32_WCE
 	int GetScrollLimit() const
 	{
-		int nMin = 0, nMax = 0;
-		::GetScrollRange(m_hWnd, SB_CTL, &nMin, &nMax);
-		SCROLLINFO info = { sizeof(SCROLLINFO), SIF_PAGE };
-		if(::GetScrollInfo(m_hWnd, SB_CTL, &info))
-			nMax -= ((info.nPage - 1) > 0) ? (info.nPage - 1) : 0;
+		SCROLLINFO info = { sizeof(SCROLLINFO), SIF_RANGE | SIF_PAGE };
+		::GetScrollInfo(m_hWnd, SB_CTL, &info);
+		if(info.nPage > 1)
+			info.nMax -= info.nPage - 1;
 
-		return nMax;
+		return info.nMax;
 	}
 
 #if (WINVER >= 0x0500)
@@ -1886,8 +1882,6 @@ public:
 
 	void Attach(HIMAGELIST hImageList)
 	{
-		ATLASSERT(m_hImageList == NULL);
-		ATLASSERT(hImageList != NULL);
 		if(t_bManaged && (m_hImageList != NULL) && (m_hImageList != hImageList))
 			ImageList_Destroy(m_hImageList);
 		m_hImageList = hImageList;
@@ -2225,7 +2219,7 @@ public:
 class CToolInfo : public TOOLINFO
 {
 public:
-	CToolInfo(UINT nFlags, HWND hWnd, UINT nIDTool = 0, LPRECT lpRect = NULL, LPTSTR lpstrText = LPSTR_TEXTCALLBACK, LPARAM lUserParam = NULL)
+	CToolInfo(UINT nFlags, HWND hWnd, UINT_PTR nIDTool = 0, LPRECT lpRect = NULL, LPTSTR lpstrText = LPSTR_TEXTCALLBACK, LPARAM lUserParam = NULL)
 	{
 		Init(nFlags, hWnd, nIDTool, lpRect, lpstrText, lUserParam);
 	}
@@ -2234,7 +2228,7 @@ public:
 
 	operator LPARAM() { return (LPARAM)this; }
 
-	void Init(UINT nFlags, HWND hWnd, UINT nIDTool = 0, LPRECT lpRect = NULL, LPTSTR lpstrText = LPSTR_TEXTCALLBACK, LPARAM lUserParam = NULL)
+	void Init(UINT nFlags, HWND hWnd, UINT_PTR nIDTool = 0, LPRECT lpRect = NULL, LPTSTR lpstrText = LPSTR_TEXTCALLBACK, LPARAM lUserParam = NULL)
 	{
 		ATLASSERT(::IsWindow(hWnd));
 		memset(this, 0, sizeof(TOOLINFO));
@@ -2292,7 +2286,7 @@ public:
 		::SendMessage(m_hWnd, TTM_GETTEXT, 0, (LPARAM)&lpToolInfo);
 	}
 
-	void GetText(LPTSTR lpstrText, HWND hWnd, UINT nIDTool = 0) const
+	void GetText(LPTSTR lpstrText, HWND hWnd, UINT_PTR nIDTool = 0) const
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		ATLASSERT(hWnd != NULL);
@@ -2306,7 +2300,7 @@ public:
 		return (BOOL)::SendMessage(m_hWnd, TTM_GETTOOLINFO, 0, (LPARAM)lpToolInfo);
 	}
 
-	BOOL GetToolInfo(HWND hWnd, UINT nIDTool, UINT* puFlags, LPRECT lpRect, LPTSTR lpstrText) const
+	BOOL GetToolInfo(HWND hWnd, UINT_PTR nIDTool, UINT* puFlags, LPRECT lpRect, LPTSTR lpstrText) const
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		ATLASSERT(hWnd != NULL);
@@ -2334,7 +2328,7 @@ public:
 		::SendMessage(m_hWnd, TTM_NEWTOOLRECT, 0, (LPARAM)lpToolInfo);
 	}
 
-	void SetToolRect(HWND hWnd, UINT nIDTool, LPCRECT lpRect)
+	void SetToolRect(HWND hWnd, UINT_PTR nIDTool, LPCRECT lpRect)
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		ATLASSERT(hWnd != NULL);
@@ -2425,10 +2419,16 @@ public:
 		return size;
 	}
 
-	BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle)
+	BOOL SetTitle(UINT_PTR uIcon, LPCTSTR lpstrTitle)
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		return (BOOL)::SendMessage(m_hWnd, TTM_SETTITLE, uIcon, (LPARAM)lpstrTitle);
+	}
+
+	BOOL SetTitle(HICON hIcon, LPCTSTR lpstrTitle)
+	{
+		ATLASSERT(::IsWindow(m_hWnd));
+		return (BOOL)::SendMessage(m_hWnd, TTM_SETTITLE, (WPARAM)hIcon, (LPARAM)lpstrTitle);
 	}
 #endif // (_WIN32_IE >= 0x0500)
 
@@ -2459,7 +2459,7 @@ public:
 		return (BOOL)::SendMessage(m_hWnd, TTM_ADDTOOL, 0, (LPARAM)lpToolInfo);
 	}
 
-	BOOL AddTool(HWND hWnd, ATL::_U_STRINGorID text = LPSTR_TEXTCALLBACK, LPCRECT lpRectTool = NULL, UINT nIDTool = 0)
+	BOOL AddTool(HWND hWnd, ATL::_U_STRINGorID text = LPSTR_TEXTCALLBACK, LPCRECT lpRectTool = NULL, UINT_PTR nIDTool = 0)
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		ATLASSERT(hWnd != NULL);
@@ -2476,7 +2476,7 @@ public:
 		::SendMessage(m_hWnd, TTM_DELTOOL, 0, (LPARAM)lpToolInfo);
 	}
 
-	void DelTool(HWND hWnd, UINT nIDTool = 0)
+	void DelTool(HWND hWnd, UINT_PTR nIDTool = 0)
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		ATLASSERT(hWnd != NULL);
@@ -2522,7 +2522,7 @@ public:
 		::SendMessage(m_hWnd, TTM_UPDATETIPTEXT, 0, (LPARAM)lpToolInfo);
 	}
 
-	void UpdateTipText(ATL::_U_STRINGorID text, HWND hWnd, UINT nIDTool = 0)
+	void UpdateTipText(ATL::_U_STRINGorID text, HWND hWnd, UINT_PTR nIDTool = 0)
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		ATLASSERT(hWnd != NULL);
@@ -2531,7 +2531,7 @@ public:
 		::SendMessage(m_hWnd, TTM_UPDATETIPTEXT, 0, ti);
 	}
 
-	BOOL EnumTools(UINT nTool, LPTOOLINFO lpToolInfo) const
+	BOOL EnumTools(UINT_PTR nTool, LPTOOLINFO lpToolInfo) const
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		return (BOOL)::SendMessage(m_hWnd, TTM_ENUMTOOLS, nTool, (LPARAM)lpToolInfo);
@@ -2549,7 +2549,7 @@ public:
 		::SendMessage(m_hWnd, TTM_TRACKACTIVATE, bActivate, (LPARAM)lpToolInfo);
 	}
 
-	void TrackActivate(HWND hWnd, UINT nIDTool, BOOL bActivate)
+	void TrackActivate(HWND hWnd, UINT_PTR nIDTool, BOOL bActivate)
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 		ATLASSERT(hWnd != NULL);
@@ -4544,6 +4544,9 @@ public:
 #if (_WIN32_IE >= 0x0600)
 	HTREEITEM GetNextSelectedItem() const
 	{
+#ifndef TVGN_NEXTSELECTED
+		const WORD TVGN_NEXTSELECTED = 0x000B;
+#endif
 		ATLASSERT(::IsWindow(m_hWnd));
 		return (HTREEITEM)::SendMessage(m_hWnd, TVM_GETNEXTITEM, TVGN_NEXTSELECTED, 0L);
 	}
@@ -4913,6 +4916,9 @@ public:
 #if (_WIN32_IE >= 0x0600)
 	CTreeItemT<TBase> GetNextSelectedItem() const
 	{
+#ifndef TVGN_NEXTSELECTED
+		const WORD TVGN_NEXTSELECTED = 0x000B;
+#endif
 		ATLASSERT(::IsWindow(m_hWnd));
 		HTREEITEM hTreeItem = (HTREEITEM)::SendMessage(m_hWnd, TVM_GETNEXTITEM, TVGN_NEXTSELECTED, 0L);
 		return CTreeItemT<TBase>(hTreeItem, (CTreeViewCtrlExT<TBase>*)this);
@@ -8687,12 +8693,18 @@ public:
 #if (_WIN32_IE >= 0x0600)
 	DWORD GetExtendedStyle() const
 	{
+#ifndef RB_GETEXTENDEDSTYLE
+	const UINT RB_GETEXTENDEDSTYLE = WM_USER + 42;
+#endif
 		ATLASSERT(::IsWindow(m_hWnd));
 		return (DWORD)::SendMessage(m_hWnd, RB_GETEXTENDEDSTYLE, 0, 0L);
 	}
 
 	DWORD SetExtendedStyle(DWORD dwStyle, DWORD dwMask)
 	{
+#ifndef RB_SETEXTENDEDSTYLE
+		const UINT RB_SETEXTENDEDSTYLE = WM_USER + 41;
+#endif
 		ATLASSERT(::IsWindow(m_hWnd));
 		return (DWORD)::SendMessage(m_hWnd, RB_SETEXTENDEDSTYLE, dwMask, dwStyle);
 	}

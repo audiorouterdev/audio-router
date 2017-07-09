@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLCTRLW_H__
 #define __ATLCTRLW_H__
@@ -1097,6 +1094,12 @@ public:
 #ifdef _CMDBAR_EXTRA_TRACE
 		ATLTRACE2(atlTraceUI, 0, _T("CmdBar - OnKeyDown\n"));
 #endif
+		if(m_bAttachedMenu)   // nothing to do in this mode
+		{
+			bHandled = FALSE;
+			return 1;
+		}
+
 		bHandled = FALSE;
 		// Simulate Alt+Space for the parent
 		if(wParam == VK_SPACE)
@@ -1131,8 +1134,15 @@ public:
 #ifdef _CMDBAR_EXTRA_TRACE
 		ATLTRACE2(atlTraceUI, 0, _T("CmdBar - OnKeyUp\n"));
 #endif
+		if(m_bAttachedMenu)   // nothing to do in this mode
+		{
+			bHandled = FALSE;
+			return 1;
+		}
+
 		if(wParam != VK_SPACE)
 			bHandled = FALSE;
+
 		return 0;
 	}
 
@@ -1141,6 +1151,12 @@ public:
 #ifdef _CMDBAR_EXTRA_TRACE
 		ATLTRACE2(atlTraceUI, 0, _T("CmdBar - OnChar\n"));
 #endif
+		if(m_bAttachedMenu)   // nothing to do in this mode
+		{
+			bHandled = FALSE;
+			return 1;
+		}
+
 		if(wParam != VK_SPACE)
 			bHandled = FALSE;
 		else
@@ -1422,9 +1438,9 @@ public:
 
 	LRESULT OnSettingChange(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
-#ifndef SPI_GETKEYBOARDCUES
+#ifndef SPI_SETKEYBOARDCUES
 		const UINT SPI_SETKEYBOARDCUES = 0x100B;
-#endif // !SPI_GETKEYBOARDCUES
+#endif // !SPI_SETKEYBOARDCUES
 #ifndef SPI_GETFLATMENU
 		const UINT SPI_SETFLATMENU = 0x1023;
 #endif // !SPI_GETFLATMENU
@@ -2371,7 +2387,8 @@ public:
 	void DrawMenuText(CDCHandle& dc, RECT& rc, LPCTSTR lpstrText, COLORREF color)
 	{
 		int nTab = -1;
-		for(int i = 0; i < lstrlen(lpstrText); i++)
+		const int nLen = lstrlen(lpstrText);
+		for(int i = 0; i < nLen; i++)
 		{
 			if(lpstrText[i] == _T('\t'))
 			{
@@ -4102,7 +4119,7 @@ public:
 #ifndef _WTL_NO_AUTO_THEME
 		if(m_hTheme != NULL)
 		{
-#ifndef TMSCHEMA_H
+#if !defined(TMSCHEMA_H) && !defined(__VSSYM32_H__)
 			const int WP_MDICLOSEBUTTON = 20;
 			const int CBS_NORMAL = 1;
 			const int CBS_PUSHED = 3;
@@ -4115,7 +4132,7 @@ public:
 			const int MINBS_NORMAL = 1;
 			const int MINBS_PUSHED = 3;
 			const int MINBS_DISABLED = 4;
-#endif // TMSCHEMA_H
+#endif // !defined(TMSCHEMA_H) && !defined(__VSSYM32_H__)
 			if(nBtn == -1 || nBtn == 0)
 				m_pfnDrawThemeBackground(m_hTheme, dc, WP_MDICLOSEBUTTON, m_bParentActive ? ((m_nBtnPressed == 0) ? CBS_PUSHED : CBS_NORMAL) : CBS_DISABLED, &pRects[0], NULL);
 			if(nBtn == -1 || nBtn == 1)

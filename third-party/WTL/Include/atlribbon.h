@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLRIBBON_H__
 #define __ATLRIBBON_H__
@@ -378,20 +375,20 @@ struct CharFormat : CHARFORMAT2
 	// Default constructor
 	CharFormat()
 	{
-		cbSize = sizeof CHARFORMAT2;
+		cbSize = sizeof(CHARFORMAT2);
 		Reset();
 	}
 
 	// Copy constructor
 	CharFormat(const CharFormat& cf)
 	{
-		CopyMemory(this, &cf, sizeof CHARFORMAT2);
+		::CopyMemory(this, &cf, sizeof(CHARFORMAT2));
 	}
 
 	// Assign operator
 	CharFormat& operator =(const CharFormat& cf)
 	{
-		CopyMemory(this, &cf, sizeof CHARFORMAT2);
+		::CopyMemory(this, &cf, sizeof(CHARFORMAT2));
 		return (*this);
 	}
 
@@ -553,17 +550,17 @@ private:
 	// Put functions
 	void PutMaskEffect(WORD dwMaskVal, WORD dwEffectVal, REFPROPERTYKEY key, IPropertyStore* pStore)
 	{
-		PROPVARIANT propvar;
+		PROPVARIANT var;
 		UI_FONTPROPERTIES uProp = UI_FONTPROPERTIES_NOTAVAILABLE;
 		if ((dwMask & dwMaskVal) != 0)
 			uProp = dwEffects & dwEffectVal ? UI_FONTPROPERTIES_SET : UI_FONTPROPERTIES_NOTSET;
-		SetPropertyVal(key, uProp, &propvar);
-		pStore->SetValue(key, propvar);
+		SetPropertyVal(key, uProp, &var);
+		pStore->SetValue(key, var);
 	}
 
 	void PutVerticalPos(IPropertyStore* pStore)
 	{
-		PROPVARIANT propvar;
+		PROPVARIANT var;
 		UI_FONTVERTICALPOSITION uProp = UI_FONTVERTICALPOSITION_NOTAVAILABLE;
 
 		if ((dwMask & CFE_SUBSCRIPT) != 0)
@@ -581,21 +578,21 @@ private:
 				uProp = UI_FONTVERTICALPOSITION_SUBSCRIPT;
 		}
 
-		SetPropertyVal(UI_PKEY_FontProperties_VerticalPositioning, uProp, &propvar);
-		pStore->SetValue(UI_PKEY_FontProperties_VerticalPositioning, propvar);
+		SetPropertyVal(UI_PKEY_FontProperties_VerticalPositioning, uProp, &var);
+		pStore->SetValue(UI_PKEY_FontProperties_VerticalPositioning, var);
 	}
 
 	void PutFace(IPropertyStore* pStore)
 	{
-		PROPVARIANT propvar;
+		PROPVARIANT var;
 		SetPropertyVal(UI_PKEY_FontProperties_Family, 
-			dwMask & CFM_FACE ? szFaceName : L"", &propvar);
-		pStore->SetValue(UI_PKEY_FontProperties_Family, propvar);
+			dwMask & CFM_FACE ? szFaceName : L"", &var);
+		pStore->SetValue(UI_PKEY_FontProperties_Family, var);
 	}
 
 	void PutSize(IPropertyStore* pStore)
 	{
-		PROPVARIANT propvar;
+		PROPVARIANT var;
 		DECIMAL decVal;
 
 		if ((dwMask & CFM_SIZE) != 0)
@@ -603,13 +600,14 @@ private:
 		else
 			VarDecFromI4(0, &decVal);
 
-		SetPropertyVal(UI_PKEY_FontProperties_Size, &decVal, &propvar);
-		pStore->SetValue(UI_PKEY_FontProperties_Size, propvar);
+		SetPropertyVal(UI_PKEY_FontProperties_Size, &decVal, &var);
+		pStore->SetValue(UI_PKEY_FontProperties_Size, var);
 	}
 
 	void PutColor(IPropertyStore* pStore)
 	{
 		if ((dwMask & CFM_COLOR) != 0)
+		{
 			if ((dwEffects & CFE_AUTOCOLOR) == 0)
 			{
 				SetPropertyVal(UI_PKEY_FontProperties_ForegroundColorType, UI_SWATCHCOLORTYPE_RGB, &propvar);
@@ -623,6 +621,7 @@ private:
 				SetPropertyVal(UI_PKEY_FontProperties_ForegroundColorType, UI_SWATCHCOLORTYPE_AUTOMATIC, &propvar);
 				pStore->SetValue(UI_PKEY_FontProperties_ForegroundColorType, propvar);
 			}
+		}
 	}
 
 	void PutBackColor(IPropertyStore* pStore)
@@ -897,7 +896,7 @@ public:
 
 	CollectionImpl() : m_size(t_items)
 	{
-		FillMemory(m_auItemCat, sizeof m_auItemCat, 0xff); // UI_COLLECTION_INVALIDINDEX
+		::FillMemory(m_auItemCat, sizeof(m_auItemCat), 0xff); // UI_COLLECTION_INVALIDINDEX
 	}
 
 	UINT32 m_auItemCat[t_items];
@@ -1133,7 +1132,7 @@ public:
 	
 	ItemCollectionImpl()
 	{
-		ZeroMemory(m_aBitmap, sizeof m_aBitmap);
+		::ZeroMemory(m_aBitmap, sizeof(m_aBitmap));
 	}
 
 	CBitmap m_aBitmap[t_items];
@@ -1215,8 +1214,8 @@ public:
 
 	CommandCollectionImpl()
 	{
-		ZeroMemory(m_auCmd, sizeof m_auCmd);
-		ZeroMemory(m_aCmdType, sizeof m_aCmdType);
+		::ZeroMemory(m_auCmd, sizeof(m_auCmd));
+		::ZeroMemory(m_aCmdType, sizeof(m_aCmdType));
 	}
 
 	UINT32 m_auCmd[t_items];

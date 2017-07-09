@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLFIND_H__
 #define __ATLFIND_H__
@@ -860,38 +857,17 @@ public:
 				if ((ovi.dwMajorVersion == 5 && ovi.dwMinorVersion >= 1) || (ovi.dwMajorVersion > 5))
 #endif // _versionhelpers_H_INCLUDED_
 				{
-					// We use DLLVERSIONINFO_private so we don't have to depend on shlwapi.h
-					typedef struct _DLLVERSIONINFO_private
+					DWORD dwMajor = 0, dwMinor = 0;
+					HRESULT hRet = ATL::AtlGetCommCtrlVersion(&dwMajor, &dwMinor);
+					if(SUCCEEDED(hRet))
 					{
-						DWORD cbSize;
-						DWORD dwMajorVersion;
-						DWORD dwMinorVersion;
-						DWORD dwBuildNumber;
-						DWORD dwPlatformID;
-					} DLLVERSIONINFO_private;
-
-					HMODULE hModule = ::LoadLibrary("comctl32.dll");
-					if(hModule != NULL)
-					{
-						typedef HRESULT (CALLBACK *LPFN_DllGetVersion)(DLLVERSIONINFO_private *);
-						LPFN_DllGetVersion fnDllGetVersion = (LPFN_DllGetVersion)::GetProcAddress(hModule, "DllGetVersion");
-						if(fnDllGetVersion != NULL)
+						if(dwMajor >= 6)
 						{
-							DLLVERSIONINFO_private version = { sizeof(DLLVERSIONINFO_private) };
-							if(SUCCEEDED(fnDllGetVersion(&version)))
-							{
-								if(version.dwMajorVersion >= 6)
-								{
-									pThisNoConst->m_bShadowBufferNeeded = TRUE;
+							pThisNoConst->m_bShadowBufferNeeded = TRUE;
 
-									ATLTRACE2(atlTraceUI, 0, _T("Warning: You have compiled for MBCS/ANSI but are using common controls version 6 or later (likely through a manifest file).\r\n"));
-									ATLTRACE2(atlTraceUI, 0, _T("If you use common controls version 6 or later, you should only do so for UNICODE builds.\r\n"));
-								}
-							}
+							ATLTRACE2(atlTraceUI, 0, _T("Warning: You have compiled for MBCS/ANSI but are using common controls version 6 or later (likely through a manifest file).\r\n"));
+							ATLTRACE2(atlTraceUI, 0, _T("If you use common controls version 6 or later, you should only do so for UNICODE builds.\r\n"));
 						}
-
-						::FreeLibrary(hModule);
-						hModule = NULL;
 					}
 				}
 #endif // !_UNICODE

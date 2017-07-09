@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLSCRL_H__
 #define __ATLSCRL_H__
@@ -912,7 +909,7 @@ public:
 #if (_MSC_VER >= 1300)
 		BOOL bRet = ATL::CWindowImpl< T, TBase, TWinTraits >::SubclassWindow(hWnd);
 #else // !(_MSC_VER >= 1300)
-/		typedef ATL::CWindowImpl< T, TBase, TWinTraits >   _baseClass;
+		typedef ATL::CWindowImpl< T, TBase, TWinTraits >   _baseClass;
 		BOOL bRet = _baseClass::SubclassWindow(hWnd);
 #endif // !(_MSC_VER >= 1300)
 		if(bRet != FALSE)
@@ -1211,7 +1208,7 @@ public:
 #if (_MSC_VER >= 1300)
 		BOOL bRet = ATL::CWindowImpl< T, TBase, TWinTraits >::SubclassWindow(hWnd);
 #else // !(_MSC_VER >= 1300)
-/		typedef ATL::CWindowImpl< T, TBase, TWinTraits >   _baseClass;
+		typedef ATL::CWindowImpl< T, TBase, TWinTraits >   _baseClass;
 		BOOL bRet = _baseClass::SubclassWindow(hWnd);
 #endif // !(_MSC_VER >= 1300)
 		if(bRet != FALSE)
@@ -1770,7 +1767,7 @@ public:
 	{
 		T* pT = static_cast<T*>(this);
 		int nId = pT->GetDlgCtrlID();
-		NMHDR nmhdr = { pT->m_hWnd, nId, ZSN_ZOOMCHANGED };
+		NMHDR nmhdr = { pT->m_hWnd, (UINT_PTR)nId, ZSN_ZOOMCHANGED };
 		::SendMessage(pT->GetParent(), WM_NOTIFY, (WPARAM)nId, (LPARAM)&nmhdr);
 	}
 
@@ -1944,7 +1941,7 @@ public:
 #if (_MSC_VER >= 1300)
 		BOOL bRet = ATL::CWindowImpl< T, TBase, TWinTraits >::SubclassWindow(hWnd);
 #else // !(_MSC_VER >= 1300)
-/		typedef ATL::CWindowImpl< T, TBase, TWinTraits >   _baseClass;
+		typedef ATL::CWindowImpl< T, TBase, TWinTraits >   _baseClass;
 		BOOL bRet = _baseClass::SubclassWindow(hWnd);
 #endif // !(_MSC_VER >= 1300)
 		if(bRet != FALSE)

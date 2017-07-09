@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLGDI_H__
 #define __ATLGDI_H__
@@ -3680,8 +3677,8 @@ struct DIBINFO16 // a BITMAPINFO with 2 additional color bitfields
 	DIBINFO16(SIZE size) 
 	{
 		BITMAPINFOHEADER bmih = { sizeof(BITMAPINFOHEADER), size.cx, size.cy, 
-		                          1, 16, (DWORD)BI_BITFIELDS, (DWORD)2 * size.cx * size.cy, 0, 0, 3 };
-		DWORD dw[3] = DIBINFO16_BITFIELDS;
+		                          1, 16, BI_BITFIELDS, (DWORD)(2 * size.cx * size.cy), 0, 0, 3 };
+		DWORD dw[3] = DIBINFO16_BITFIELDS ;
 
 		bmiHeader = bmih;
 		SecureHelper::memcpy_x(bmiColors, sizeof(bmiColors), dw, 3 * sizeof(DWORD));
