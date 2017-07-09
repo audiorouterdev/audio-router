@@ -172,7 +172,6 @@
     <ClInclude Include="dialog_main.h" />
     <ClInclude Include="formview.h" />
     <ClInclude Include="delegation.h" />
-    <ClInclude Include="licensing.h" />
     <ClInclude Include="policy_config.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="routing_params.h" />
@@ -195,7 +194,6 @@
     <ClCompile Include="dialog_control.cpp" />
     <ClCompile Include="dialog_main.cpp" />
     <ClCompile Include="formview.cpp" />
-    <ClCompile Include="licensing.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="delegation.cpp" />
     <ClCompile Include="policy_config.cpp" />

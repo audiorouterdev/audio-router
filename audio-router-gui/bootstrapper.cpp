@@ -325,9 +325,7 @@ bootstrapper::bootstrapper(HWND hwnd) :
         catch(std::wstring err) {}
     }
     if(!this->available)
-        MessageBox(
-        this->hwnd, L"Initialization failed. " \
-        L"Automatic routing functionality not available.", NULL, MB_ICONERROR);
+        MessageBox(this->hwnd, L"Initialization failed, Automatic routing functionality not available.", NULL, MB_ICONERROR);
 }
 
 bootstrapper::~bootstrapper()

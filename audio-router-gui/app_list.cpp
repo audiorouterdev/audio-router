@@ -39,9 +39,7 @@ bool app_list::populate_list(const filters_t & filters) {
 bool app_list::get_app_info(app_info & info, const filters_t & filters, bool x86, bool query_name) {
     HMODULE hmodules[1024];
     DWORD needed;
-    HANDLE hprocess = OpenProcess(
-        PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
-        FALSE, info.id);
+    HANDLE hprocess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, info.id);
     if (hprocess == NULL)
         return false;
 

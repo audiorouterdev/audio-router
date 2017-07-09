@@ -3,7 +3,6 @@
 #include "dialog_main.h"
 #include "formview.h"
 #include "bootstrapper.h"
-#include "licensing.h"
 #include <memory>
 
 #include "clsSysTray.h"
@@ -23,8 +22,9 @@ private:
 public:
     dialog_main* dlg_main;
     formview* form_view;
-    /*dialog_licensing* license;*/
-    /*bootstrapper* bootstrap;*/
+#ifdef ENABLE_BOOTSTRAP
+    bootstrapper* bootstrap;
+#endif
 
     explicit window(/*bootstrapper**/);
     ~window();

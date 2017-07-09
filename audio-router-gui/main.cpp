@@ -1,6 +1,8 @@
 #include "window.h"
 #include "util.h"
+#ifndef DISABLE_TELEMETRY
 #include "telemetry.h"
+#endif
 #include <gdiplus.h>
 #include <cassert>
 //#include <time.h>

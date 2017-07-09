@@ -13,7 +13,9 @@
 #define IDD_TIMER_CONTROL_DLG 2
 #define TIMER_INTERVAL_CONTROL_DLG 10
 
+#ifndef DISABLE_TELEMETRY 
 extern telemetry* telemetry_m;
+#endif
 
 DWORD custom_trackbar_ctrl::OnPrePaint(int /*idCtrl*/, LPNMCUSTOMDRAW /*lpNMCustomDraw*/)
 {
@@ -542,8 +544,10 @@ void dialog_control::do_route(bool duplication)
 
     if(sel_index >= 0)
     {
-        if(telemetry_m)
+    #ifndef DISABLE_TELEMETRY
+        if (telemetry_m)
             telemetry_m->update_on_routing();
+    #endif // !DISABLE_TELEMETRY
 
         app_inject injector;
         try

@@ -3,7 +3,9 @@
 #include "wtl.h"
 #include "app_list.h"
 #include "app_inject.h"
+#ifndef DISABLE_TELEMETRY
 #include "telemetry.h"
+#endif
 #include <vector>
 #include <string>
 #include <map>

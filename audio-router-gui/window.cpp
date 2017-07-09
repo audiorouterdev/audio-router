@@ -1,9 +1,17 @@
 #include "window.h"
 
+#ifndef DISABLE_TELEMETRY
 telemetry* telemetry_m = NULL;
+#endif
 HMENU trayIconMenu;
 
-window::window(/*bootstrapper* bootstrap*/) : dlg_main_b(true)/*, license(NULL)*//*, bootstrap(bootstrap)*/
+// TODO: by wolfreak99: Check audiorouterdevs "remove saved routing functionality"
+// To determine if bootstrap (and telemetry) are related to feature..
+#ifdef ENABLE_BOOTSTRAP
+window::window(bootstrapper* bootstrap) : dlg_main_b(true), bootstrap(bootstrap)
+#else
+window::window(/*bootstrapper* bootstrap*/) : dlg_main_b(true)/*, bootstrap(bootstrap)*/
+#endif
 {
     this->dlg_main = new dialog_main(*this);
     this->form_view = new formview(*this);
@@ -15,16 +23,18 @@ window::~window()
     if (this->dlg_main_b)
         delete this->dlg_main;
     delete this->form_view;
-
+    
+#ifndef DISABLE_TELEMETRY
     delete telemetry_m;
     telemetry_m = NULL;
+#endif
 }
 
 int window::OnCreate(LPCREATESTRUCT lpcs)
 {
+#ifndef DISABLE_TELEMETRY
     telemetry_m = new telemetry;
-
-    /*this->license = new dialog_licensing(*this);*/
+#endif
 
     this->m_hWndClient = this->dlg_main->Create(this->m_hWnd);
     this->dlg_main->ShowWindow(SW_SHOW);
