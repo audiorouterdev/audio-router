@@ -108,19 +108,22 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     }
 
     MSG msg = { 0 };
-    //std::unique_ptr<bootstrapper> bootstrap;
-    //try
-    //{
-    //    // TODO: decide if create a dummy bootstapper in case if the initialization fails
-    //    bootstrap.reset(new bootstrapper);
-    //}
-    //catch(std::wstring err)
-    //{
-    //    err += L"Audio Router will close.";
-    //    MessageBox(NULL, err.c_str(), NULL, MB_ICONERROR);
-    //    goto cleanup;
-    //}
 
+#ifdef ENABLE_BOOTSTRAP
+    std::unique_ptr<bootstrapper> bootstrap;
+    try
+    {
+        // TODO: decide if create a dummy bootstapper in case if the initialization fails
+        bootstrap.reset(new bootstrapper);
+    }
+    catch(std::wstring err)
+    {
+        err += L"Audio Router will close.";
+        MessageBox(NULL, err.c_str(), NULL, MB_ICONERROR);
+        goto cleanup;
+    }
+#endif
+    
     {
         window win/*(bootstrap.get())*/;
         RECT r = { CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT + WIN_WIDTH, CW_USEDEFAULT + WIN_HEIGHT };

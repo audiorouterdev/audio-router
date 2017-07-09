@@ -25,9 +25,10 @@ public:
     formview* form_view;
 #ifdef ENABLE_BOOTSTRAP
     bootstrapper* bootstrap;
+    explicit window(bootstrapper*);
+#else
+    explicit window();
 #endif
-
-    explicit window(/*bootstrapper**/);
     ~window();
 
     DECLARE_FRAME_WND_CLASS(L"Audio Router", IDR_MAINFRAME);

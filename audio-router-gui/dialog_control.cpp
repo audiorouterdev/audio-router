@@ -628,8 +628,12 @@ LRESULT dialog_control::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
     this->img.reset(new Bitmap(rc.bottom - rc.top, rc.right - rc.left));
 
     // check if the application is implicitly routed, aka managed
-    /*bootstrapper& bootstrap = *this->parent.parent.parent.bootstrap;*/
-    this->managed = false;//bootstrap.is_saved_routing(this->pid, this->parent.get_device());
+#ifdef ENABLE_BOOTSTRAP
+    bootstrapper& bootstrap = *this->parent.parent.parent.bootstrap;
+    this->managed = bootstrap.is_saved_routing(this->pid, this->parent.get_device());
+#else
+    this->managed = false;
+#endif
 
     return 0;
 }
@@ -785,105 +789,108 @@ LRESULT dialog_control::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
     return 0;
 }
 
-//LRESULT dialog_control::OnPopUpSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-//{
-//    if(this->MessageBoxW(
-//        L"This will add a new saved routing for this application. It will not " \
-//        L"replace the old saved routings for this application. Do you wish to continue?",
-//        L"Confirmation for Save", MB_OKCANCEL | MB_ICONQUESTION) != IDOK)
-//        return 0;
-//
-//    bootstrapper& bootstrap = *this->parent.parent.parent.bootstrap;
-//
-//    input_dialog input_dlg(2);
-//    input_dlg.DoModal(*this);
-//    if(IsBadReadPtr(this, sizeof(dialog_control)))
-//        return 0;
-//    const int sel_index = input_dlg.selected_index;
-//    if(sel_index > 0)
-//    {
-//        app_inject::devices_t devices;
-//        app_inject::get_devices(devices);
-//        try
-//        {
-//            bootstrap.save_routing(this->pid, devices[sel_index - 1]);
-//        }
-//        catch(std::wstring err)
-//        {
-//            app_inject::clear_devices(devices);
-//            this->MessageBoxW(err.c_str(), NULL, MB_ICONERROR);
-//            return 0;
-//        }
-//        app_inject::clear_devices(devices);
-//
-//        dialog_main& main = this->parent.parent;
-//        for(dialog_main::dialog_arrays_t::iterator it = main.dialog_arrays.begin();
-//            it != main.dialog_arrays.end();
-//            it++)
-//        {
-//            for(dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
-//                jt != (*it)->dialog_controls.end();
-//                jt++)
-//            {
-//                (*jt)->managed = bootstrap.is_saved_routing((*jt)->pid, (*jt)->parent.get_device());
-//                (*jt)->update_attributes();
-//            }
-//        }
-//
-//        this->MessageBoxW(L"Routing saved. Restart the application for the new settings " \
-//            L"to take effect.", 
-//            L"Success", MB_ICONINFORMATION);
-//    }
-//    else if(sel_index == 0)
-//        this->MessageBoxW(L"You cannot save routing to the default device!", 
-//        NULL, MB_ICONERROR);
-//
-//    return 0;
-//}
+
+#ifdef ENABLE_BOOTSTRAP
+LRESULT dialog_control::OnPopUpSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+    if(this->MessageBoxW(
+        L"This will add a new saved routing for this application. It will not " \
+        L"replace the old saved routings for this application. Do you wish to continue?",
+        L"Confirmation for Save", MB_OKCANCEL | MB_ICONQUESTION) != IDOK)
+        return 0;
+
+    bootstrapper& bootstrap = *this->parent.parent.parent.bootstrap;
+
+    input_dialog input_dlg(2);
+    input_dlg.DoModal(*this);
+    if(IsBadReadPtr(this, sizeof(dialog_control)))
+        return 0;
+    const int sel_index = input_dlg.selected_index;
+    if(sel_index > 0)
+    {
+        app_inject::devices_t devices;
+        app_inject::get_devices(devices);
+        try
+        {
+            bootstrap.save_routing(this->pid, devices[sel_index - 1]);
+        }
+        catch(std::wstring err)
+        {
+            app_inject::clear_devices(devices);
+            this->MessageBoxW(err.c_str(), NULL, MB_ICONERROR);
+            return 0;
+        }
+        app_inject::clear_devices(devices);
+
+        dialog_main& main = this->parent.parent;
+        for(dialog_main::dialog_arrays_t::iterator it = main.dialog_arrays.begin();
+            it != main.dialog_arrays.end();
+            it++)
+        {
+            for(dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
+                jt != (*it)->dialog_controls.end();
+                jt++)
+            {
+                (*jt)->managed = bootstrap.is_saved_routing((*jt)->pid, (*jt)->parent.get_device());
+                (*jt)->update_attributes();
+            }
+        }
+
+        this->MessageBoxW(L"Routing saved. Restart the application for the new settings " \
+            L"to take effect.", 
+            L"Success", MB_ICONINFORMATION);
+    }
+    else if(sel_index == 0)
+        this->MessageBoxW(L"You cannot save routing to the default device!", 
+        NULL, MB_ICONERROR);
+
+    return 0;
+}
 
 
-//LRESULT dialog_control::OnPopUpDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-//{
-//    bootstrapper& bootstrap = *this->parent.parent.parent.bootstrap;
-//
-//    if(this->MessageBoxW(
-//        L"This will delete all the saved routings for this application. It won't " \
-//        L"delete the routings for any other application. Proceed?",
-//        L"Confirmation for Delete All", MB_OKCANCEL | MB_ICONWARNING) != IDOK)
-//        return 0;
-//
-//    try
-//    {
-//        if(!bootstrap.delete_all(this->pid))
-//        {
-//            this->MessageBoxW(
-//                L"This application doesn't have any saved routings.", NULL, MB_ICONERROR);
-//            return 0;
-//        }
-//    }
-//    catch(std::wstring err)
-//    {
-//        this->MessageBoxW(err.c_str(), NULL, MB_ICONERROR);
-//        return 0;
-//    }
-//
-//    dialog_main& main = this->parent.parent;
-//    for(dialog_main::dialog_arrays_t::iterator it = main.dialog_arrays.begin();
-//        it != main.dialog_arrays.end();
-//        it++)
-//    {
-//        for(dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
-//            jt != (*it)->dialog_controls.end();
-//            jt++)
-//        {
-//            (*jt)->managed = bootstrap.is_saved_routing((*jt)->pid, (*jt)->parent.get_device());
-//            (*jt)->update_attributes();
-//        }
-//    }
-//
-//    this->MessageBoxW(L"Saved routings for this application deleted. Restart " \
-//        L"the application for the new settings to take effect.", 
-//        L"Success", MB_ICONINFORMATION);
-//
-//    return 0;
-//}
+LRESULT dialog_control::OnPopUpDelete(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+    bootstrapper& bootstrap = *this->parent.parent.parent.bootstrap;
+
+    if(this->MessageBoxW(
+        L"This will delete all the saved routings for this application. It won't " \
+        L"delete the routings for any other application. Proceed?",
+        L"Confirmation for Delete All", MB_OKCANCEL | MB_ICONWARNING) != IDOK)
+        return 0;
+
+    try
+    {
+        if(!bootstrap.delete_all(this->pid))
+        {
+            this->MessageBoxW(
+                L"This application doesn't have any saved routings.", NULL, MB_ICONERROR);
+            return 0;
+        }
+    }
+    catch(std::wstring err)
+    {
+        this->MessageBoxW(err.c_str(), NULL, MB_ICONERROR);
+        return 0;
+    }
+
+    dialog_main& main = this->parent.parent;
+    for(dialog_main::dialog_arrays_t::iterator it = main.dialog_arrays.begin();
+        it != main.dialog_arrays.end();
+        it++)
+    {
+        for(dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
+            jt != (*it)->dialog_controls.end();
+            jt++)
+        {
+            (*jt)->managed = bootstrap.is_saved_routing((*jt)->pid, (*jt)->parent.get_device());
+            (*jt)->update_attributes();
+        }
+    }
+
+    this->MessageBoxW(L"Saved routings for this application deleted. Restart " \
+        L"the application for the new settings to take effect.", 
+        L"Success", MB_ICONINFORMATION);
+
+    return 0;
+}
+#endif
