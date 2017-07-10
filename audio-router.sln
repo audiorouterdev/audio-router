@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio-router", "audio-router\audio-router.vcxproj", "{86155A2C-3C1E-4A36-85F8-8A4FB8D493FC}"
 EndProject
@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sandbox", "sandbox\sandbox.vcxproj", "{FB81C2D1-C580-481D-9749-730FA7630AB2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bootstrapper", "bootstrapper\bootstrapper.vcxproj", "{B5DFF12D-773D-4917-BB0D-A9A253D614B0}"
 EndProject
@@ -64,14 +62,6 @@ Global
 		{57EBB3F2-AADE-4B98-974E-D01C89FF0FFE}.Release|Win32.Build.0 = Release|Win32
 		{57EBB3F2-AADE-4B98-974E-D01C89FF0FFE}.Release|x64.ActiveCfg = Release|x64
 		{57EBB3F2-AADE-4B98-974E-D01C89FF0FFE}.Release|x64.Build.0 = Release|x64
-		{FB81C2D1-C580-481D-9749-730FA7630AB2}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{FB81C2D1-C580-481D-9749-730FA7630AB2}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{FB81C2D1-C580-481D-9749-730FA7630AB2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FB81C2D1-C580-481D-9749-730FA7630AB2}.Debug|x64.ActiveCfg = Debug|x64
-		{FB81C2D1-C580-481D-9749-730FA7630AB2}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{FB81C2D1-C580-481D-9749-730FA7630AB2}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{FB81C2D1-C580-481D-9749-730FA7630AB2}.Release|Win32.ActiveCfg = Release|Win32
-		{FB81C2D1-C580-481D-9749-730FA7630AB2}.Release|x64.ActiveCfg = Release|x64
 		{B5DFF12D-773D-4917-BB0D-A9A253D614B0}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{B5DFF12D-773D-4917-BB0D-A9A253D614B0}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{B5DFF12D-773D-4917-BB0D-A9A253D614B0}.Debug|Win32.ActiveCfg = Debug|Win32
