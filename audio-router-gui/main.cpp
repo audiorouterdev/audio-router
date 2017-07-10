@@ -11,6 +11,7 @@
 CAppModule _Module;
 HANDLE audio_router_mutex;
 
+
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     /*srand(time(NULL));*/
@@ -47,7 +48,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
     delete [] serialized_params;*/
 
-    if(GetModuleHandle(L"Audio Router.exe") == NULL)
+    if (GetModuleHandle(L"Audio Router.exe") == NULL)
     {
         MessageBox(
             NULL, L"Wrong application name. Audio Router will close.", NULL, MB_ICONERROR);
@@ -59,31 +60,31 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
         assert(sec.get() != NULL);
         audio_router_mutex = CreateMutex(sec.get(), FALSE, L"Local\\audio-router-mutex");
     }
-    if(audio_router_mutex == NULL)
-    {
-        MessageBox(
-            NULL, L"Mutex creation failed. Audio Router will close.", NULL, MB_ICONERROR);
-        return 0;
-    }
-    else if(GetLastError() == ERROR_ALREADY_EXISTS)
-    {
-        CloseHandle(audio_router_mutex);
-        MessageBox(
-            NULL, L"Another instance of Audio Router is already running. " \
-            L"Audio Router will close.", NULL, MB_ICONERROR);
-        return 0;
-    }
+
+    //if (audio_router_mutex == NULL)
+    //{
+    //    MessageBox(
+    //        NULL, L"Mutex creation failed. Audio Router will close.", NULL, MB_ICONERROR);
+    //    return 0;
+    //}
+    //else if (GetLastError() == ERROR_ALREADY_EXISTS)
+    //{
+    //    CloseHandle(audio_router_mutex);
+    //    MessageBox(
+    //        NULL, L"Another instance of Audio Router is already running. " \
+    //        L"Audio Router will close.", NULL, MB_ICONERROR);
+    //    return 0;
+    //}
 
     HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
-    if(hr != S_OK)
+    if (hr != S_OK)
     {
         CloseHandle(audio_router_mutex);
-        MessageBox(
-            NULL, L"COM could not be initialized. Audio Router will close.", NULL, MB_ICONERROR);
+        MessageBox(NULL, L"COM could not be initialized. Audio Router will close.", NULL, MB_ICONERROR);
         return 0;
     }
 
-    if(_Module.Init(NULL, hInstance) != S_OK)
+    if (_Module.Init(NULL, hInstance) != S_OK)
     {
         CoUninitialize();
         CloseHandle(audio_router_mutex);
@@ -94,7 +95,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
     ULONG_PTR gdiplusToken;
     Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-    if(Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL) != Gdiplus::Ok)
+    if (Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL) != Gdiplus::Ok)
     {
         _Module.Term();
         CoUninitialize();
@@ -104,7 +105,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
         return 0;
     }
 
-    MSG msg = {0};
+    MSG msg = { 0 };
     //std::unique_ptr<bootstrapper> bootstrap;
     //try
     //{
@@ -117,20 +118,25 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     //    MessageBox(NULL, err.c_str(), NULL, MB_ICONERROR);
     //    goto cleanup;
     //}
+
     {
         window win/*(bootstrap.get())*/;
-        RECT r = {CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT + WIN_WIDTH, CW_USEDEFAULT + WIN_HEIGHT};
-        if(win.CreateEx(NULL, &r) == NULL)
+        RECT r = { CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT + WIN_WIDTH, CW_USEDEFAULT + WIN_HEIGHT };
+
+
+        if (win.CreateEx(NULL, &r) == NULL)
         {
             MessageBox(NULL, L"Could not create window. Audio Router will close.", NULL, MB_ICONERROR);
             goto cleanup;
         }
+
         win.ShowWindow(nCmdShow);
         win.UpdateWindow();
 
-        while(GetMessage(&msg, NULL, 0, 0) > 0)
+        while (GetMessage(&msg, NULL, 0, 0) > 0)
         {
-            if(win.dlg_main && IsDialogMessage(*win.dlg_main, &msg))
+
+            if (win.dlg_main && IsDialogMessage(*win.dlg_main, &msg))
                 continue;
             TranslateMessage(&msg);
             DispatchMessage(&msg);
@@ -145,3 +151,4 @@ cleanup:
 
     return (int)msg.wParam;
 }
+

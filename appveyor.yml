@@ -1,0 +1,19 @@
+version: 0.0.1.{build}-{branch}
+pull_requests:
+  do_not_increment_build_number: true
+branches:
+  only:
+  - develop
+max_jobs: 4
+image: Visual Studio 2017
+configuration:
+- Release
+- Debug
+platform:
+- Win32
+- x64
+clone_folder: c:\projects\audio-router
+build:
+  project: c:\projects\audio-router\audio-router.sln
+  publish_nuget: true
+  verbosity: minimal

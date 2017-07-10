@@ -467,28 +467,28 @@ public:
 #ifndef _WIN32_WCE
 	void SetCaptionFont()
 	{
-		NONCLIENTMETRICS ncm = { RunTimeHelper::SizeOf_NONCLIENTMETRICS() };
+		NONCLIENTMETRICS ncm = { (UINT)RunTimeHelper::SizeOf_NONCLIENTMETRICS() };
 		ATLVERIFY(::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0));
 		Copy(&ncm.lfCaptionFont);
 	}
 
 	void SetMenuFont()
 	{
-		NONCLIENTMETRICS ncm = { RunTimeHelper::SizeOf_NONCLIENTMETRICS() };
+		NONCLIENTMETRICS ncm = { (UINT)RunTimeHelper::SizeOf_NONCLIENTMETRICS() };
 		ATLVERIFY(::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0));
 		Copy(&ncm.lfMenuFont);
 	}
 
 	void SetStatusFont()
 	{
-		NONCLIENTMETRICS ncm = { RunTimeHelper::SizeOf_NONCLIENTMETRICS() };
+		NONCLIENTMETRICS ncm = { (UINT)RunTimeHelper::SizeOf_NONCLIENTMETRICS() };
 		ATLVERIFY(::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0));
 		Copy(&ncm.lfStatusFont);
 	}
 
 	void SetMessageBoxFont()
 	{
-		NONCLIENTMETRICS ncm = { RunTimeHelper::SizeOf_NONCLIENTMETRICS() };
+		NONCLIENTMETRICS ncm = { (UINT)RunTimeHelper::SizeOf_NONCLIENTMETRICS() };
 		ATLVERIFY(::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0));
 		Copy(&ncm.lfMessageFont);
 	}
@@ -3680,8 +3680,8 @@ struct DIBINFO16 // a BITMAPINFO with 2 additional color bitfields
 	DIBINFO16(SIZE size) 
 	{
 		BITMAPINFOHEADER bmih = { sizeof(BITMAPINFOHEADER), size.cx, size.cy, 
-		                          1, 16, BI_BITFIELDS, 2 * size.cx * size.cy , 0, 0, 3 };
-		DWORD dw[3] = DIBINFO16_BITFIELDS ;
+		                          1, 16, (DWORD)BI_BITFIELDS, (DWORD)2 * size.cx * size.cy, 0, 0, 3 };
+		DWORD dw[3] = DIBINFO16_BITFIELDS;
 
 		bmiHeader = bmih;
 		SecureHelper::memcpy_x(bmiColors, sizeof(bmiColors), dw, 3 * sizeof(DWORD));

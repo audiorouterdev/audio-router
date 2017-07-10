@@ -1,6 +1,7 @@
 #include "window.h"
 
 telemetry* telemetry_m = NULL;
+HMENU trayIconMenu;
 
 window::window(/*bootstrapper* bootstrap*/) : dlg_main_b(true)/*, license(NULL)*//*, bootstrap(bootstrap)*/
 {
@@ -10,7 +11,8 @@ window::window(/*bootstrapper* bootstrap*/) : dlg_main_b(true)/*, license(NULL)*
 
 window::~window()
 {
-    if(this->dlg_main_b)
+    STray.RemoveIcon();
+    if (this->dlg_main_b)
         delete this->dlg_main;
     delete this->form_view;
 
@@ -27,53 +29,107 @@ int window::OnCreate(LPCREATESTRUCT lpcs)
     this->m_hWndClient = this->dlg_main->Create(this->m_hWnd);
     this->dlg_main->ShowWindow(SW_SHOW);
 
+    bIsVisible = true;
+    STray.hWnd = this->m_hWnd;
+    STray.SetTipText("Audio Router");
+    STray.AddIcon();
     return 0;
 }
 
 LRESULT window::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-    if(wParam == SC_MINIMIZE)
-    {
-        for(dialog_main::dialog_arrays_t::iterator it = this->dlg_main->dialog_arrays.begin();
-            it != this->dlg_main->dialog_arrays.end();
-            it++)
+
+    if (wParam == SC_MINIMIZE) {
+        for (dialog_main::dialog_arrays_t::iterator it = this->dlg_main->dialog_arrays.begin();
+             it != this->dlg_main->dialog_arrays.end();
+             it++)
         {
-            for(dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
-                jt != (*it)->dialog_controls.end();
-                jt++)
+            for (dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
+                 jt != (*it)->dialog_controls.end();
+                 jt++)
             {
                 (*jt)->set_display_name(false, true);
             }
+
         }
-    }
-    else if(wParam == SC_RESTORE)
-    {
-        for(dialog_main::dialog_arrays_t::iterator it = this->dlg_main->dialog_arrays.begin();
-            it != this->dlg_main->dialog_arrays.end();
-            it++)
+
+        this->ShowWindow(SW_HIDE);
+        bIsVisible = false;
+        return 0;
+
+    } else if (wParam == SC_RESTORE) {
+        for (dialog_main::dialog_arrays_t::iterator it = this->dlg_main->dialog_arrays.begin();
+             it != this->dlg_main->dialog_arrays.end();
+             it++)
         {
-            for(dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
-                jt != (*it)->dialog_controls.end();
-                jt++)
+            for (dialog_array::dialog_controls_t::iterator jt = (*it)->dialog_controls.begin();
+                 jt != (*it)->dialog_controls.end();
+                 jt++)
             {
                 (*jt)->set_display_name(false, false);
             }
         }
+    } else if (wParam == SC_CLOSE) {
+        this->ShowWindow(SW_HIDE);
+        bIsVisible = false;
+        return 0;
     }
+
 
     bHandled = FALSE;
     return 0;
 }
 
+LRESULT window::OnTrayNotify(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+    if (trayIconMenu != NULL) {
+        DestroyMenu(trayIconMenu);
+        trayIconMenu = NULL;
+    }
+
+    switch (LOWORD(lParam))
+    {
+        case WM_LBUTTONUP:
+            if (bIsVisible) {
+                this->ShowWindow(SW_HIDE);
+                bIsVisible = false;
+            }
+            else {
+                this->ShowWindow(SW_SHOW);
+                this->BringWindowToTop();
+                bIsVisible = true;
+            }
+            break;
+        case WM_RBUTTONUP:
+            trayIconMenu = CreatePopupMenu();
+            
+            UINT menuFlags = MF_BYPOSITION | MF_STRING;
+            InsertMenuW(trayIconMenu, -1, menuFlags, ID_TRAYMENU_SHOWHIDE, _T("Show/hide"));
+            InsertMenuW(trayIconMenu, -1, menuFlags, ID_FILE_EXIT, _T("Exit"));
+
+            POINT lpClickPoint;
+            GetCursorPos(&lpClickPoint);
+            
+            int nReserved = 0;
+            
+            TrackPopupMenu(trayIconMenu,
+                TPM_RIGHTALIGN | TPM_BOTTOMALIGN | TPM_LEFTBUTTON,
+                lpClickPoint.x, lpClickPoint.y,
+                nReserved, this->m_hWnd, NULL
+            );
+            break;
+    }
+    return 0;
+}
+
 LRESULT window::OnFileRefreshlist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-    if(!this->dlg_main_b)
+    if (!this->dlg_main_b)
     {
         this->form_view->refresh_list();
     }
     return 0;
 }
-
 
 LRESULT window::OnAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
@@ -81,18 +137,17 @@ LRESULT window::OnAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BO
         L"Audio Router version 0.10.2.\n" \
         L"\nIf you come across any bugs(especially relating to routing or duplicating), " \
         L"or just have an idea for a new feature, " \
-        L"please send a PM to the developer on reddit: reddit.com/user/audiorouterdev/", 
+        L"please send a PM to the developer on reddit: reddit.com/user/audiorouterdev/",
         L"About", MB_ICONINFORMATION);
     return 0;
 }
-
 
 LRESULT window::OnFileSwitchview(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
     RECT rc;
     this->GetClientRect(&rc);
 
-    if(this->dlg_main_b)
+    if (this->dlg_main_b)
     {
         this->dlg_main->DestroyWindow();
         delete this->dlg_main;
@@ -100,8 +155,7 @@ LRESULT window::OnFileSwitchview(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWnd
         this->m_hWndClient = this->form_view->Create(*this);
         //this->form_view->ShowWindow(SW_SHOW);
         this->form_view->SetWindowPos(NULL, &rc, SWP_NOZORDER | SWP_SHOWWINDOW);
-    }
-    else
+    } else
     {
         this->form_view->DestroyWindow();
 
@@ -119,4 +173,40 @@ LRESULT window::OnFileSwitchview(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWnd
 LRESULT window::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
     return HTCLOSE;
+}
+
+LRESULT window::OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+    PostQuitMessage(0);
+    return 0;
+}
+
+LRESULT window::OnTrayMenuExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+    if (trayIconMenu != NULL) {
+        DestroyMenu(trayIconMenu);
+        trayIconMenu = NULL;
+    }
+
+    PostQuitMessage(0);
+    return 0;
+}
+
+LRESULT window::OnTrayMenuShowHide(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+    if (trayIconMenu != NULL) {
+        DestroyMenu(trayIconMenu);
+        trayIconMenu = NULL;
+    }
+
+    if (bIsVisible) {
+        this->ShowWindow(SW_HIDE);
+        bIsVisible = false;
+    }
+    else {
+        this->ShowWindow(SW_SHOW);
+        this->BringWindowToTop();
+        bIsVisible = true;
+    }
+    return 0;
 }
