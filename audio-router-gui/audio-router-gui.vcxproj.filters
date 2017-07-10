@@ -66,7 +66,7 @@
     <ClInclude Include="bootstrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="licensing.h">
+    <ClInclude Include="clsSysTray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -124,7 +124,7 @@
     <ClCompile Include="bootstrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="licensing.cpp">
+    <ClCompile Include="clsSysTray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

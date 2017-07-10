@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLTHEME_H__
 #define __ATLTHEME_H__
@@ -38,9 +35,7 @@
   #endif
 #endif
 
-#ifndef _UXTHEME_H_
-  #include <uxtheme.h>
-#endif
+#include <uxtheme.h>
 #pragma comment(lib, "uxtheme.lib")
 
 // Note: To create an application that also runs on older versions of Windows,

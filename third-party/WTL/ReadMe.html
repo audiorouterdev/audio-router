@@ -28,14 +28,14 @@ html, body {
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" id="AutoNumber3">
   <tr>
     <td class="style3">
-	<p style="text-align: left"><font face="Arial"><b>Windows Template Library - WTL Version 9.0</b></font><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-	(build 4140 final) 2014-05-20</font></td>
+	<p style="text-align: left"><font face="Arial"><b>Windows Template Library - WTL Version 9.1</b></font><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	(build 5321 final) 2015-11-17</font></td>
   </tr>
   <tr>
     <td><hr></td>
   </tr>
   <tr>
-    <td><font face="Arial" size="2">Copyright &#169; 2014 Microsoft Corporation, WTL Team. All rights reserved.</font></td>
+    <td><font face="Arial" size="2">Copyright &#169; 2015 Microsoft Corporation, WTL Team. All rights reserved.</font></td>
   </tr>
   <tr>
     <td>&nbsp;</td>
@@ -44,11 +44,8 @@ html, body {
     <td><font face="Arial" size="2">This file is a part of the Windows Template 
 	Library.<br>
 	The use and distribution terms for this software are covered by the<br>
-	Common Public License 1.0 (<a target="_blank" href="http://opensource.org/licenses/cpl1.0.php">http://opensource.org/licenses/cpl1.0.php</a>)<br>
-	which can be found in the file CPL.TXT at the root of this distribution.<br>
-	By using this software in any fashion, you are agreeing to be bound by<br>
-	the terms of this license. You must not remove this notice, or<br>
-	any other, from this software.</font></td>
+	Microsoft Public License (<a target="_blank" href="http://opensource.org/licenses/MS-PL">http://opensource.org/licenses/MS-PL</a>)<br>
+	which can be found in the file MS-PL.txt at the root folder.<br></font></td>
   </tr>
   <tr>
     <td><hr></td>
@@ -60,12 +57,12 @@ html, body {
 <p style=margin:0in>&nbsp;</p>
 
 <p style=margin:0in><font face="Arial" size="2">Welcome to the Windows Template Library, version 
-9.0. This document contains the following topics:</font></p>
+9.1. This document contains the following topics:</font></p>
 <p style=margin:0in>&nbsp;</p>
 <ul style="margin-top:0in;margin-bottom:0in">
 	<li><font face="Arial" size="2"><a href="#Introduction">Introduction</a></font></li>
-	<li><font face="Arial" size="2"><a href="#Features And Installation">Features 
-  And Installation</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Features and Installation">Features 
+  and Installation</a></font></li>
 	<li><font face="Arial" size="2"><a href="#Packing List">Packing List</a></font></li>
 	<li><font face="Arial" size="2"><a href="#Class Overview">Class Overview</a></font></li>
 	<li><font face="Arial" size="2"><a href="#ATL/WTL AppWizard">ATL/WTL AppWizard</a></font></li>
@@ -75,16 +72,18 @@ html, body {
 	<a href="#Support for Visual C++ Express">Support for Visual C++ 
 	Express</a></font></li>
 	<li><font face="Arial" size="2"><a href="#Notes">Notes</a></font></li>
-	<li><font face="Arial" size="2"><a href="#Changes Between WTL 9.0 And 8.0">Changes Between WTL 
-	9.0 And 8.0</a></font></li>
-	<li><font face="Arial" size="2"><a href="#Changes Between WTL 8.0 And 7.5">Changes Between WTL 
-	8.0 And 7.5</a></font></li>
-	<li><font face="Arial" size="2"><a href="#Changes Between WTL 7.5 And 7.1">Changes Between WTL 7.5 And 7.1</a></font></li>
-	<li><font face="Arial" size="2"><a href="#Changes Between WTL 7.1 And 7.0">Changes Between WTL 
-  7.1 And 7.0</a></font></li>
-	<li><font face="Arial" size="2"><a href="#Changes Between WTL 7.0 And 3.1">Changes Between WTL 
-  7.0 And 3.1</a></font></li>
-	<li><font face="Arial" size="2"><a href="#Changes Between WTL 3.1 And 3.0">Changes Between WTL 3.1 And 3.0</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Changes Between WTL 9.1 and 9.0">Changes Between WTL 
+	9.1 and 9.0</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Changes Between WTL 9.0 and 8.0">Changes Between WTL 
+	9.0 and 8.0</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Changes Between WTL 8.0 and 7.5">Changes Between WTL 
+	8.0 and 7.5</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Changes Between WTL 7.5 and 7.1">Changes Between WTL 7.5 and 7.1</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Changes Between WTL 7.1 and 7.0">Changes Between WTL 
+  7.1 and 7.0</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Changes Between WTL 7.0 and 3.1">Changes Between WTL 
+  7.0 and 3.1</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Changes Between WTL 3.1 and 3.0">Changes Between WTL 3.1 and 3.0</a></font></li>
 </ul>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
@@ -114,14 +113,14 @@ model to a programmer.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial">
-<b><a name="Features And Installation"></a>Features And Installation</b></font></p>
+<b><a name="Features and Installation"></a>Features and Installation</b></font></p>
 <p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">This is the seventh public release 
-of WTL, after WTL 3.0, 3.1, 7.0, 7.1, 7.5, and 8.0. It is also the third release of WTL 
-under the Common Public License, enabling developers from the WTL community to 
+<p style=margin:0in><font face="Arial" size="2">This is the eigth public release 
+of WTL, after WTL 3.0, 3.1, 7.0, 7.1, 7.5, 8.0, and 9.0. This version is released 
+under the Microsoft Public License, enabling developers from the WTL community to 
 contribute to the library.</font></p>
 <p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">WTL classes can be used with either VC++ 6.0, VC++ .NET 2002 or 2003, VC++ 2005 or 2008 or 2010 or 2012 or 2013, 
+<p style=margin:0in><font face="Arial" size="2">WTL classes can be used with either VC++ 6.0, VC++ .NET 2002 or 2003, VC++ 2005 or 2008 or 2010 or 2012 or 2013 or 2015, 
 or EVC++ 4.0 or 3.0. AppWizard for Visual Studio is 
 included.</font></p>
 <p style=margin:0in>&nbsp;</p>
@@ -168,6 +167,8 @@ Visual C++ 2010&nbsp;&nbsp; (ATL 10.0)</font></p>
 Visual C++ 2012&nbsp;&nbsp; (ATL 11.0)</font></p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Visual C++ 2013&nbsp;&nbsp; (ATL 12.0)</font></p>
+<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Visual C++ 2015&nbsp;&nbsp; (ATL 14.0)</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; SDK 
 (optional):</font></p>
@@ -213,8 +214,8 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
     <td width="358"><font face="Arial" size="2">this file</font></td>
   </tr>
   <tr>
-    <td width="136"><font face="Arial" size="2">CPL.TXT</font></td>
-    <td width="358"><font face="Arial" size="2">Common Public License</font></td>
+    <td width="136"><font face="Arial" size="2">MS-PL.txt</font></td>
+    <td width="358"><font face="Arial" size="2">Microsoft Public License</font></td>
   </tr>
   <tr>
     <td width="494" colspan="2">&nbsp;</td>
@@ -353,6 +354,10 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
 	<tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; MDIDocVw\...</font></td>
     <td width="358"><font face="Arial" size="2">WTL version of the MDI sample</font></td>
+  </tr>
+	<tr>
+    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; MemDlg\...</font></td>
+    <td width="358"><font face="Arial" size="2">In-memory dialog sample</font></td>
   </tr>
 	<tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; MiniPie\...</font></td>
@@ -1747,21 +1752,21 @@ WTL application. It has options to create code for different application types a
 </ul>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">ATL/WTL AppWizard supports VC++ 
-.NET 2002 and 2003, VC++ 2005, 2008, 2010, 2012, and 2013.</font></p>
+.NET 2002 and 2003, VC++ 2005, 2008, 2010, 2012, 2013, and 2015.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><b><font face="Arial">
 <a name="Support for Windows CE"></a>Support for 
 Windows CE</font></b></p>
 <p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">WTL now fully supports building 
-projects for the Windows CE platforms. This initial support for Windows CE was implemented primarily for 
+<p style=margin:0in><font face="Arial" size="2">WTL fully supports building 
+projects for the Windows CE platforms. The initial support for Windows CE was implemented primarily for 
 eMbedded Visual C++ 4.0 with Pocket PC 2003 and 
 SmartPhone 2003 SDKs. However, it can be used with other versions and 
 configurations. For instance, Standard SDK 4.1 or 5.0 is supported as well. Considerable effort was made to provide the best Windows CE support, 
 however, there might be some limitations because different platforms provide different 
-programming support. SmartDevice projects with Visual Studio 2005 are also 
-supported, and it also includes an AppWizard for VS2005.</font></p>
+programming support. SmartDevice projects with Visual Studio 2005 and 2008 are also 
+supported, and it also includes an AppWizard for VS2005 and VS2008.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">The support for Windows CE was 
 not designed to port projects for the desktop version of Windows as-is to the 
@@ -1775,6 +1780,8 @@ services that are appropriate and supported for each Windows CE platform.</font>
 <p style=margin:0in><b><font face="Arial">
 <a name="Support for Visual C++ Express"></a>Support for 
 Visual C++ Express</font></b></p>
+<p style=margin:0in>&nbsp;</p>
+<p style=margin:0in><font face="Arial" size="2">Note: Visual Studio Express is not the only or the best free development environment any more - <b>Visual Studio Community</b> provides a complete release of Visual Studio for free.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">WTL supports using Visual C++ Express Edition to build projects. Since Visual C++ Express ships without ATL, you have to use a version of ATL that ships with Windows Driver Kit 7.1.0 or Platform SDK (Windows Server 2003 R2 Platform SDK).</font></p>
 <p style=margin:0in>&nbsp;</p>
@@ -1791,6 +1798,7 @@ Visual C++ Express</font></b></p>
   <li><font face="Arial" size="2">VC++ 2010 Express</font></li>
   <li><font face="Arial" size="2">VC++ Express 2012 for Windows Desktop</font></li>
   <li><font face="Arial" size="2">VC++ Express 2013 for Windows Desktop</font></li>
+  <li><font face="Arial" size="2">VC++ Express 2015 for Windows Desktop</font></li>
 </ul>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">Supported ATL versions:</font></p>
@@ -1800,9 +1808,9 @@ Visual C++ Express</font></b></p>
 </ul>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">Download Links:</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.microsoft.com/en-us/download/details.aspx?id=40787">Visual Studio Express 2013 for Windows Desktop</a></font></p>
+<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="https://www.visualstudio.com/downloads/download-visual-studio-vs#d-community">Visual Studio Community 2013 and 2015</a></font></p>
+<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="https://www.visualstudio.com/downloads/download-visual-studio-vs">Visual Studio Express 2013 and 2015 for Windows Desktop</a></font></p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.microsoft.com/en-us/download/details.aspx?id=34673">Visual Studio Express 2012 for Windows Desktop</a></font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.visualstudio.com/downloads/download-visual-studio-vs#DownloadFamilies_4">Visual Studio 2010 Express</a></font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.microsoft.com/en-us/download/details.aspx?id=11800">Windows Driver Kit Version 7.1.0</a></font></p>
 <p style=margin:0in>&nbsp;</p>
@@ -1895,7 +1903,49 @@ and entering 5.01 as a value.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><b><font face="Arial">
-<a name="Changes Between WTL 9.0 And 8.0"></a>Changes Between WTL 9.0 And 8.0</font></b></p>
+
+<a name="Changes Between WTL 9.1 and 9.0"></a>Changes Between WTL 9.1 and 9.0</font></b></p>
+<p style=margin:0in>&nbsp;</p>
+  <p style=margin:0in><font face="Arial" size="2">New and improved:</font></p>
+  <blockquote style='margin-top:0in;margin-bottom:0in'>
+  <p style=margin:0in><font face="Arial" size="2">
+	Full compatibility with VS2015<br>
+	NuGet support and package<br>
+	Microsoft Public License (MS-PL)<br>
+	New sample: MemDlg - demonstrates use of in-memory dialogs
+  </blockquote>
+  <p style=margin:0in>&nbsp;</p>
+<p style=margin:0in><font face="Arial" size="2">Fixes and enhancements:</font></p>
+  <blockquote style='margin-top:0in;margin-bottom:0in'>
+  <p style=margin:0in><font face="Arial" size="2">
+	Fixes for code analysis warnings<br>
+	Fixes for strict const-qualification conformance (/Zc:strictStrings)<br>
+	CEditFindReplaceImpl::UseShadowBuffer(): Use AtlGetCommCtrlVersion() instead of GetProcAddress()<br>
+	Misc improvements: missing initialization, undefined messages, better #ifdefs<br>
+	CFrameWndClassInfo: Use GetSystemMetrics() for icon sizes<br>
+	BEGIN_MSG_MAP_EX and BEGIN_DDX_MAP: Fix for C4555: expression has no effect<br>
+	CResource::LoadEx(): Fix for the wrong order for parameters to ::FindResourceEx()<br>
+	CPaneContainerImpl:</font></p>
+	<ul style='margin-top:0in;margin-bottom:0in'>
+		<li><p style=margin:0in><font face="Arial" size="2">New extended styles: PANECNT_DIVIDER and PANECNT_GRADIENT</font></p></li>
+		<li><p style=margin:0in><font face="Arial" size="2">Fixed background drawing for close button</font></p></li>
+	</ul>
+	<p style=margin:0in><font face="Arial" size="2">
+	CImageListManaged: Fix for assert when using attach or operator =<br>
+	WTLExplorer sample cleanup<br>
+	GenericWndClass::Register(): Fix for Windows CE<br>
+	App Wizard: Improved code for generating project configurations<br>
+	CSplitterImpl::OnCaptureChanged(): Fixed so it moves splitter bar only if move was in progress<br>
+	CDynamicUpdateUI::UIRemoveUpdateElement() leaks memory if UPDUI_TEXT is set<br>
+	CToolInfo and CToolTipCtrl: nIDTool argument should be UINT_PTR instead of UINT<br>
+	CSplitterImpl: Added GetSplitterPosPct()<br>
+	CCommandBarCtrlImpl: Fixed incorrect use of m_wndParent when AttachToWindow() is used
+  </blockquote>
+<p style=margin:0in>&nbsp;</p>
+<p style=margin:0in>&nbsp;</p>
+<p style=margin:0in><b><font face="Arial">
+
+<a name="Changes Between WTL 9.0 and 8.0"></a>Changes Between WTL 9.0 and 8.0</font></b></p>
 <p style=margin:0in>&nbsp;</p>
   <p style=margin:0in><font face="Arial" size="2">New and improved:</font></p>
 <blockquote style='margin-top:0in;margin-bottom:0in'>
@@ -2016,7 +2066,7 @@ and entering 5.01 as a value.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><b><font face="Arial">
-<a name="Changes Between WTL 8.0 And 7.5"></a>Changes Between WTL 8.0 And 7.5</font></b></p>
+<a name="Changes Between WTL 8.0 and 7.5"></a>Changes Between WTL 8.0 and 7.5</font></b></p>
 <p style=margin:0in>&nbsp;</p>
   <p style=margin:0in><font face="Arial" size="2">New and improved:</font></p>
 <blockquote style='margin-top:0in;margin-bottom:0in'>
@@ -2347,7 +2397,7 @@ and entering 5.01 as a value.</font></p>
 	<p style=margin:0in>&nbsp;</p>
 	<p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><b><font face="Arial">
-<a name="Changes Between WTL 7.5 And 7.1"></a>Changes Between WTL 7.5 And 7.1</font></b></p>
+<a name="Changes Between WTL 7.5 and 7.1"></a>Changes Between WTL 7.5 and 7.1</font></b></p>
 <p style=margin:0in>&nbsp;</p>
   <p style=margin:0in><font face="Arial" size="2">New and improved:</font></p>
 <blockquote style='margin-top:0in;margin-bottom:0in'>
@@ -2697,7 +2747,7 @@ and entering 5.01 as a value.</font></p>
 <p style=margin:0in><br>
 &nbsp;</p>
 <p style=margin:0in><b><font face="Arial">
-<a name="Changes Between WTL 7.1 And 7.0"></a>Changes Between WTL 7.1 And 7.0</font></b></p>
+<a name="Changes Between WTL 7.1 and 7.0"></a>Changes Between WTL 7.1 and 7.0</font></b></p>
 <p style=margin:0in>&nbsp;</p>
   <p style=margin:0in><font face="Arial" size="2">New and improved:</font></p>
 <blockquote style='margin-top:0in;margin-bottom:0in'>
@@ -3132,7 +3182,7 @@ and entering 5.01 as a value.</font></p>
   <p style=margin:0in>&nbsp;</p>
   <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><b><font face="Arial">
-<a name="Changes Between WTL 7.0 And 3.1"></a>Changes Between WTL 7.0 And 3.1</font></b></p>
+<a name="Changes Between WTL 7.0 and 3.1"></a>Changes Between WTL 7.0 and 3.1</font></b></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">New classes and features:</font></p>
 <blockquote style='margin-top:0in;margin-bottom:0in'>
@@ -3395,7 +3445,7 @@ and entering 5.01 as a value.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><b><font face="Arial">
-<a name="Changes Between WTL 3.1 And 3.0"></a>Changes Between WTL 3.1 And 
+<a name="Changes Between WTL 3.1 and 3.0"></a>Changes Between WTL 3.1 and 
 3.0</font></b></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">New classes:</font></p>

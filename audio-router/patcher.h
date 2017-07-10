@@ -50,17 +50,17 @@ public:
 
     int is_patched() const
     {
-        if(IsBadReadPtr(this->original_func, sizeof(jmp_to)))
+        if (IsBadReadPtr(this->original_func, sizeof(jmp_to)))
             return 2;
 
         return (int)(memcmp(this->original_func, &this->old_bytes, sizeof(jmp_to)) != 0);
     }
 
-    const void* get_function() const {return this->original_func;}
+    const void* get_function() const { return this->original_func; }
 
     int patch(void* func_address)
     {
-        if(!func_address)
+        if (!func_address)
             return 1;
 
         //// patchable function must be 16 byte aligned to ensure atomic patching
@@ -74,22 +74,22 @@ public:
 //#endif
 //        assert(size >= sizeof(jmp_to));
 //
-        if(!VirtualProtect(func_address, sizeof(jmp_to), PAGE_EXECUTE_READWRITE, &this->old_protect))
+        if (!VirtualProtect(func_address, sizeof(jmp_to), PAGE_EXECUTE_READWRITE, &this->old_protect))
             return 2;
 
         this->original_func = func_address;
         memcpy(&this->old_bytes, this->original_func, sizeof(jmp_to));
         this->apply();
-        
+
         return 0;
     }
 
-    void lock() {EnterCriticalSection(&this->critical_section);}
-    void unlock() {LeaveCriticalSection(&this->critical_section);}
+    void lock() { EnterCriticalSection(&this->critical_section); }
+    void unlock() { LeaveCriticalSection(&this->critical_section); }
 
     void revert()
     {
-        if(IsBadWritePtr(this->original_func, sizeof(jmp_to)))
+        if (IsBadWritePtr(this->original_func, sizeof(jmp_to)))
             return;
 
         //if(this->patched)
@@ -105,7 +105,7 @@ public:
 
     void apply()
     {
-        if(IsBadWritePtr(this->original_func, sizeof(jmp_to)))
+        if (IsBadWritePtr(this->original_func, sizeof(jmp_to)))
             return;
 
         //if(!this->patched)

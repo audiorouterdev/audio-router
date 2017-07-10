@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -26,26 +26,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -66,22 +66,28 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)third-party\WTL90_4140_Final\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)third-party\WTL\Include;$(IncludePath)</IncludePath>
     <TargetName>Audio Router</TargetName>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)\obj\$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)third-party\WTL90_4140_Final\Include;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)third-party\WTL\Include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <TargetName>Audio Router</TargetName>
+    <IntDir>$(OutDir)\obj\$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)third-party\WTL90_4140_Final\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)third-party\WTL\Include;$(IncludePath)</IncludePath>
     <TargetName>Audio Router</TargetName>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)\obj\$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)third-party\WTL90_4140_Final\Include;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)third-party\WTL\Include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <TargetName>Audio Router</TargetName>
+    <IntDir>$(OutDir)\obj\$(Platform)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -159,13 +165,13 @@
     <ClInclude Include="app_inject.h" />
     <ClInclude Include="app_list.h" />
     <ClInclude Include="bootstrapper.h" />
+    <ClInclude Include="clsSysTray.h" />
     <ClInclude Include="DialogMessageHook.h" />
     <ClInclude Include="dialog_array.h" />
     <ClInclude Include="dialog_control.h" />
     <ClInclude Include="dialog_main.h" />
     <ClInclude Include="formview.h" />
     <ClInclude Include="delegation.h" />
-    <ClInclude Include="licensing.h" />
     <ClInclude Include="policy_config.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="routing_params.h" />
@@ -182,12 +188,12 @@
     <ClCompile Include="app_inject.cpp" />
     <ClCompile Include="app_list.cpp" />
     <ClCompile Include="bootstrapper.cpp" />
+    <ClCompile Include="clsSysTray.cpp" />
     <ClCompile Include="DialogMessageHook.cpp" />
     <ClCompile Include="dialog_array.cpp" />
     <ClCompile Include="dialog_control.cpp" />
     <ClCompile Include="dialog_main.cpp" />
     <ClCompile Include="formview.cpp" />
-    <ClCompile Include="licensing.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="delegation.cpp" />
     <ClCompile Include="policy_config.cpp" />

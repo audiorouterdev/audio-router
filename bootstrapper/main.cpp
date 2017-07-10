@@ -241,7 +241,7 @@ NTSTATUS NTAPI ntcreateuserprocess_patch(
             DWORD mode = PIPE_READMODE_MESSAGE;
             SetNamedPipeHandleState(hpipe, &mode, NULL, NULL);
             // flag 2 indicates that bootstrapping is only injected
-            DWORD pid_tid_both[3] = {pid, tid, in_list ? 1 : 2};
+            DWORD pid_tid_both[3] = {pid, tid, (DWORD)(in_list ? 1 : 2) };
             DWORD exitcode, bytes_read;
             BOOL success = TransactNamedPipe(
                 hpipe, pid_tid_both, sizeof(pid_tid_both), &exitcode, sizeof(exitcode),

@@ -1,13 +1,10 @@
-// Windows Template Library - WTL version 9.0
+// Windows Template Library - WTL version 9.10
 // Copyright (C) Microsoft Corporation, WTL Team. All rights reserved.
 //
 // This file is a part of the Windows Template Library.
 // The use and distribution terms for this software are covered by the
-// Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
-// which can be found in the file CPL.TXT at the root of this distribution.
-// By using this software in any fashion, you are agreeing to be bound by
-// the terms of this license. You must not remove this notice, or
-// any other, from this software.
+// Microsoft Public License (http://opensource.org/licenses/MS-PL)
+// which can be found in the file MS-PL.txt at the root folder.
 
 #ifndef __ATLAPP_H__
 #define __ATLAPP_H__
@@ -79,7 +76,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // WTL version number
 
-#define _WTL_VER	0x0900
+#define _WTL_VER	0x0910
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -766,67 +763,67 @@ namespace RunTimeHelper
 
 #endif // !_WIN32_WCE
 
-	inline int SizeOf_REBARBANDINFO()
+	inline UINT SizeOf_REBARBANDINFO()
 	{
-		int nSize = sizeof(REBARBANDINFO);
+		UINT uSize = sizeof(REBARBANDINFO);
 #if !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (_WIN32_WINNT >= 0x0600)
 		if(!(IsVista() && IsCommCtrl6()))
-			nSize = REBARBANDINFO_V6_SIZE;
+			uSize = REBARBANDINFO_V6_SIZE;
 #endif // !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (_WIN32_WINNT >= 0x0600)
-		return nSize;
+		return uSize;
 	}
 
 #if (_WIN32_WINNT >= 0x501)
-  	inline int SizeOf_LVGROUP()
+  	inline UINT SizeOf_LVGROUP()
 	{
-		int nSize = sizeof(LVGROUP);
+		UINT uSize = sizeof(LVGROUP);
 #if !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (_WIN32_WINNT >= 0x0600)
 		if(!IsVista())
-			nSize = LVGROUP_V5_SIZE;
+			uSize = LVGROUP_V5_SIZE;
 #endif // !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (_WIN32_WINNT >= 0x0600)
-		return nSize;
+		return uSize;
 	}
 
-	inline int SizeOf_LVTILEINFO()
+	inline UINT SizeOf_LVTILEINFO()
 	{
-		int nSize = sizeof(LVTILEINFO);
+		UINT uSize = sizeof(LVTILEINFO);
 #if !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (_WIN32_WINNT >= 0x0600)
 		if(!IsVista())
-			nSize = LVTILEINFO_V5_SIZE;
+			uSize = LVTILEINFO_V5_SIZE;
 #endif // !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (_WIN32_WINNT >= 0x0600)
-		return nSize;
+		return uSize;
 	}
 #endif // (_WIN32_WINNT >= 0x501)
 
-	inline int SizeOf_MCHITTESTINFO()
+	inline UINT SizeOf_MCHITTESTINFO()
 	{
-		int nSize = sizeof(MCHITTESTINFO);
+		UINT uSize = sizeof(MCHITTESTINFO);
 #if !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && defined(NTDDI_VERSION) && (NTDDI_VERSION >= NTDDI_LONGHORN)
 		if(!(IsVista() && IsCommCtrl6()))
-			nSize = MCHITTESTINFO_V1_SIZE;
+			uSize = MCHITTESTINFO_V1_SIZE;
 #endif // !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && defined(NTDDI_VERSION) && (NTDDI_VERSION >= NTDDI_LONGHORN)
-		return nSize;
+		return uSize;
 	}
 
 #ifndef _WIN32_WCE
-	inline int SizeOf_NONCLIENTMETRICS()
+	inline UINT SizeOf_NONCLIENTMETRICS()
 	{
-		int nSize = sizeof(NONCLIENTMETRICS);
+		UINT uSize = sizeof(NONCLIENTMETRICS);
 #if !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (WINVER >= 0x0600)
 		if(!IsVista())
-			nSize = NONCLIENTMETRICS_V1_SIZE;
+			uSize = NONCLIENTMETRICS_V1_SIZE;
 #endif // !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (WINVER >= 0x0600)
-		return nSize;
+		return uSize;
 	}
 
-	inline int SizeOf_TOOLINFO()
+	inline UINT SizeOf_TOOLINFO()
 	{
-		int nSize = sizeof(TOOLINFO);
+		UINT uSize = sizeof(TOOLINFO);
 #if !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (_WIN32_WINNT >= 0x0501)
 		if(!IsVista())
-			nSize = TTTOOLINFO_V2_SIZE;
+			uSize = TTTOOLINFO_V2_SIZE;
 #endif // !defined(_WTL_NO_RUNTIME_STRUCT_SIZE) && (_WIN32_WINNT >= 0x0501)
-		return nSize;
+		return uSize;
 	}
 #endif // !_WIN32_WCE
 };
@@ -1176,13 +1173,21 @@ namespace GenericWndClass
 
 	inline ATOM Register()
 	{
+#ifndef _WIN32_WCE
 		WNDCLASSEX wc = { sizeof(WNDCLASSEX) };
+#else
+		WNDCLASS wc = { 0 };
+#endif
 		wc.lpfnWndProc = ::DefWindowProc;
 		wc.hInstance = ModuleHelper::GetModuleInstance();
 		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 		wc.lpszClassName = GetName();
+#ifndef _WIN32_WCE
 		ATOM atom = ::RegisterClassEx(&wc);
+#else
+		ATOM atom = ::RegisterClass(&wc);
+#endif
 		ATLASSERT(atom != 0);
 		return atom;
 	}
@@ -1770,7 +1775,11 @@ public:
 	}
 
 // COM Server methods
+#if (_MSC_VER >= 1300)
+	LONG Unlock() throw()
+#else
 	LONG Unlock()
+#endif
 	{
 		LONG lRet = CComModule::Unlock();
 		if(lRet == 0)
