@@ -1,5 +1,7 @@
 # Audio Router
 
+**Attention!** Windows 10 has a new feature! Go to *Settings → System → Sound* and look for your *device preferences*. So this software isn't necessary for the latest version of Windows 🙂
+
 I created a similar app that does exactly what CheVolume does, except this is free at least for now. I tried to make a public post about it here on /r/software, but apparently they don't allow any download links to unknown apps in a text post.
 
 If you want to test it out, [here's the download link (64-bit).](https://github.com/audiorouterdev/audio-router/releases/download/v0.10.2/AudioRouter-0.10.2.zip)
